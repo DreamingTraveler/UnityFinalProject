@@ -99,6 +99,7 @@ public class Pitch : MonoBehaviour {
 
 	public void ChooseBallType(){
 		canChooseBall = true;
+		hitter.GetComponent<HitBall> ().hitting_force = 0;
 	}
 
 	public void CallAnimate(){
@@ -109,12 +110,10 @@ public class Pitch : MonoBehaviour {
 
 	private void PitchAnimate(){
 		pitcherAnimator.SetTrigger ("isPitch");
-		//ballAnimator.Play ("Curve");
-		hittingPoint.transform.position = new Vector3 (-155f, 19.3f, 633f);
+
+		hittingPoint.transform.position = new Vector3 (-260f, 19.3f, 726f);
 
 		Invoke ("PitchBall", 1.0f);
-
-		//PitchBall();
 	}
 
 	//leftbottom : 213.6  13.3  204.6
@@ -137,6 +136,7 @@ public class Pitch : MonoBehaviour {
 
 	public void PitchBall(){
 		Vector3 pitchPos = GameObject.Find ("Pitching_Point").transform.position;																																										
+
 
 		cloneBall = Instantiate (ball) as GameObject;
 		cloneBall.name = "CloneBall";
@@ -182,8 +182,7 @@ public class Pitch : MonoBehaviour {
             hitter.GetComponent<HitBall>().Swing(cloneBall);
         }
 	}
-
-
+		
 	private void MoveHittingPoint(GameObject cloneBall){
 		if (/*cloneBall.transform.position.x + cloneBall.transform.position.z >= 347f &&
 			cloneBall.transform.position.x + cloneBall.transform.position.z <= 448f*/
