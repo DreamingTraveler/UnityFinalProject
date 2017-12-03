@@ -31,13 +31,13 @@ public class HitBall : MonoBehaviour {
 	}
 
 	private void CreateForceTable(){
-		float ballForce = 5f;
+		float ballForce = 20f;
 		for (float ballPos = 346f; ballPos <= 448.1f; ballPos += 0.1f) {
-			forceTable.Add (ballPos.ToString("0.0"),ballForce.ToString("0.0"));
+			forceTable.Add (ballPos.ToString("0.0"),ballForce.ToString("0.00"));
 			if (ballPos < 397f) {
-				ballForce += 0.2f;
+				ballForce += 0.15f;
 			} else {
-				ballForce -= 0.2f;
+				ballForce -= 0.15f;
 			}
 		}
 		foreach (KeyValuePair<string,string>kvp in forceTable) {
