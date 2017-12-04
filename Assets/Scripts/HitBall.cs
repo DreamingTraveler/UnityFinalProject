@@ -40,9 +40,6 @@ public class HitBall : MonoBehaviour {
 				ballForce -= 0.15f;
 			}
 		}
-		foreach (KeyValuePair<string,string>kvp in forceTable) {
-			print (kvp.Key + " | " + kvp.Value); 
-		}
 	}
 
 	public bool CanHit(GameObject ball){

@@ -19,7 +19,7 @@ public class Pitch : MonoBehaviour {
 	public int badBall;
 
 	private Vector3 pitchPos;
-	private Vector3 mousePos;
+	private Vector3 tempPos;
 
 	private GameObject cloneBall;
 	private GameObject hitter;
@@ -52,8 +52,10 @@ public class Pitch : MonoBehaviour {
 		if (isPitching) {
 			CallHitter (cloneBall);
 			Vector3 ballPos = cloneBall.transform.position;
-			if (ballPos.x >= 197.8f && ballPos.x <= 262.5f && ballPos.y >= 0f && ballPos.y <= 39.6f && ballPos.z >= 154.5f && ballPos.z <= 219.2f) {
-				JudgeBall (cloneBall);
+			for(int i = 0; i < 50000; i++){
+				if (ballPos.x + ballPos.z >= 405f && ballPos.x + ballPos.z <= 415f) {
+					RecordBallPos ();
+				}
 			}
 			StopBall (cloneBall);
 		}
@@ -90,9 +92,15 @@ public class Pitch : MonoBehaviour {
 		}
 	}
 
-	private void StopBall(GameObject cloneball){
+	private void RecordBallPos(){
+		tempPos = cloneBall.transform.position;
+	}
+
+	private void StopBall(GameObject cloneBall){
 		if (cloneBall.transform.position.x + cloneBall.transform.position.z < 336f) {
 			cloneBall.GetComponent<Rigidbody> ().velocity = new Vector3(0f,0f,0f) * 0f;
+			JudgeBall ();
+			print (tempPos);
 			isPitching = false;
 		}
 	}
@@ -125,9 +133,9 @@ public class Pitch : MonoBehaviour {
 	//Brightbottom : 184.6 11 211.6
 	//Brighttop : 184.6 24.9 211.6
 	//Blefttop : 211.6 24.9 184.6
-	public void JudgeBall(GameObject cloneBall){
-		Vector3 ballPos = cloneBall.transform.position;
-		if (ballPos.x >= 204f && ballPos.x <= 222f && ballPos.y >= 9f && ballPos.y <= 24.9f && ballPos.z >= 204f && ballPos.z <= 222f) {
+	public void JudgeBall(){
+		Vector3 ballPos = tempPos;
+		if (ballPos.x >= 198.5 && ballPos.x <= 210.3f && ballPos.y >= 12.5f && ballPos.y <= 25f && ballPos.z >= 199.5f && ballPos.z <= 211f) {
 			strike++;
 		} else
 			badBall++;
@@ -137,11 +145,8 @@ public class Pitch : MonoBehaviour {
 	public void PitchBall(){
 		Vector3 pitchPos = GameObject.Find ("Pitching_Point").transform.position;																																										
 
-
 		cloneBall = Instantiate (ball) as GameObject;
 		cloneBall.name = "CloneBall";
-		//mousePos = Camera.main.ScreenToWorldPoint (new Vector3 (Input.mousePosition.x,Input.mousePosition.y,0));
-		//targetPos = new Vector3 ((Input.mousePosition.x - 385.0f), (403.0f-Input.mousePosition.y) - pitchPos.y , pitchPos.z);
 		cloneBall.transform.position = pitchPos;
 
 		cloneBall.GetComponent<Rigidbody> ().velocity = (targetPos - pitchPos).normalized * speed;
