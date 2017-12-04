@@ -22,6 +22,7 @@ public class Pitch : MonoBehaviour {
 	private Vector3 pitchPos;
 	private Vector3 tempPos;
 
+    private GameObject field;
 	private GameObject cloneBall;
 	private GameObject hitter;
 	private GameObject hittingPoint;
@@ -35,7 +36,8 @@ public class Pitch : MonoBehaviour {
 	void Start () {
 		pitcherAnimator = GameObject.FindGameObjectWithTag("Pitcher").GetComponent<Animator> ();
 		pitcherAnimator.Play("Pitcher_Idle");
-		hitter = GameObject.FindGameObjectWithTag ("Hitter");
+        field = GameObject.Find("Field");
+        hitter = GameObject.FindGameObjectWithTag ("Hitter");
 		hittingPoint = GameObject.Find ("Hitting_Point");
 		targetPoint = GameObject.Find ("Pitching_Target");
 		targetPos = targetPoint.transform.position;
@@ -137,6 +139,7 @@ public class Pitch : MonoBehaviour {
 		} else if (badBall == 4) {
 			strike = 0;
 			badBall = 0;
+            field.GetComponent<BaseCondition>().BaseStateMachine();
 		}
 		//isPitching = false;
 	}
