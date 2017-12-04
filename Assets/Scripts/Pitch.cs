@@ -17,6 +17,7 @@ public class Pitch : MonoBehaviour {
 	public bool canChooseBall = true;
 	public int strike;
 	public int badBall;
+	public int outNum;
 
 	private Vector3 pitchPos;
 	private Vector3 tempPos;
@@ -29,6 +30,7 @@ public class Pitch : MonoBehaviour {
 	private MeshRenderer targetMesh;
 	private Button confirmBallPos;
 	private Text StrikeBall;
+	private Text outNumText;
 	// Use this for initialization
 	void Start () {
 		pitcherAnimator = GameObject.FindGameObjectWithTag("Pitcher").GetComponent<Animator> ();
@@ -41,12 +43,9 @@ public class Pitch : MonoBehaviour {
 		cursor = GameObject.FindGameObjectWithTag ("Cursor");
 		confirmBallPos = GameObject.Find ("Confirm").GetComponent<Button>();
 		StrikeBall = GameObject.Find ("StrikeBall").GetComponent<Text> ();
+		outNumText = GameObject.Find ("Out").GetComponent<Text> ();
 	}
 		
-	//judgeleftbottom : 262.5  0  154.5
-	//judgelefttop : 262.5  39.6  154.5
-	//judgerighttop : 197.8  39.6  219.2
-	//judgerightbottom : 197.8  0  219.2
 	// Update is called once per frame
 	void Update () {
 		if (isPitching) {
@@ -68,6 +67,7 @@ public class Pitch : MonoBehaviour {
 			confirmBallPos.gameObject.SetActive (false);
 		}
 		StrikeBall.text = badBall + " - " + strike;
+		outNumText.text = "Out: " + outNum;
 	}
 
 	public void ChooseBallPosition(){
@@ -124,21 +124,20 @@ public class Pitch : MonoBehaviour {
 		Invoke ("PitchBall", 1.0f);
 	}
 
-	//leftbottom : 213.6  13.3  204.6
-	//rightbottom : 213.6  13.3 204.6
-	//righttop : 204.6  24.9 213.6
-	//lefttop : 204.6 24.9 213.6
-
-	//Bleftbottom : 211.6  11  184.6
-	//Brightbottom : 184.6 11 211.6
-	//Brighttop : 184.6 24.9 211.6
-	//Blefttop : 211.6 24.9 184.6
 	public void JudgeBall(){
 		Vector3 ballPos = tempPos;
-		if (ballPos.x >= 198.5 && ballPos.x <= 210.3f && ballPos.y >= 12.5f && ballPos.y <= 25f && ballPos.z >= 199.5f && ballPos.z <= 211f) {
+		if (ballPos.x >= 198.5 && ballPos.x <= 209.3f && ballPos.y >= 12.5f && ballPos.y <= 25f && ballPos.z >= 199.5f && ballPos.z <= 211f) {
 			strike++;
 		} else
 			badBall++;
+		if (strike == 3) {//strikeout!
+			outNum++;
+			strike = 0;
+			badBall = 0;
+		} else if (badBall == 4) {
+			strike = 0;
+			badBall = 0;
+		}
 		//isPitching = false;
 	}
 
@@ -160,24 +159,28 @@ public class Pitch : MonoBehaviour {
 	public void SetModeAsFourSeam(){
 		ballMode = 0;
 		hittingPointMovingSpeed = 8000f;
-		speed = 350f;
+		float randomSpeed = Random.Range (340f,360f);
+		speed = randomSpeed;
 	}
 
 	public void SetModeAsSlider(){
 		ballMode = 1;
 		hittingPointMovingSpeed = 9000f;
-		speed = 270f;
+		float randomSpeed = Random.Range (260f,280f);
+		speed = randomSpeed;
 	}
 
 	public void SetModeAsCutter(){
 		ballMode = 2;
 		hittingPointMovingSpeed = 8000f;
-		speed = 320f;
+		float randomSpeed = Random.Range (310f,330f);
+		speed = randomSpeed;
 	}
 
 	public void SetModeAsFork(){
 		ballMode = 3;
 		hittingPointMovingSpeed = 9000f;
+		float randomSpeed = Random.Range (260f,280f);
 		speed = 270f;
 	}
 
