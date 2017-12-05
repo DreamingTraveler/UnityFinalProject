@@ -79,20 +79,22 @@ public class Game : MonoBehaviour {
 		int badBall = pitcher.GetComponent<Pitch> ().badBall;
 		if (strike == 3) {//strikeout!
 			pitcher.GetComponent<Pitch>().outNum++;
-			pitcher.GetComponent<Pitch> ().strike = 0;
-			pitcher.GetComponent<Pitch> ().badBall = 0;
+            ToNextPlayer();
 		} else if (badBall == 4) {
-			pitcher.GetComponent<Pitch> ().strike = 0;
-			pitcher.GetComponent<Pitch> ().badBall = 0;
+            ToNextPlayer();
 			gameObject.GetComponent<BaseCondition> ().BaseStateMachine ();
 		}
 	}
 
+    public void ToNextPlayer() {
+        pitcher.GetComponent<Pitch>().strike = 0;
+        pitcher.GetComponent<Pitch>().badBall = 0;
+    }
+
 	public void JudgeOutBall(){
 		if (ball.transform.position.y <= 1.0f) {//The ball falls to the field
-			print (ball.transform.position);
 			isBallFlying = false;
-			if (ball.transform.position.x < 200f || ball.transform.position.z < 200f &&
+			if ((ball.transform.position.x < 200f || ball.transform.position.z < 200f) &&
 				pitcher.GetComponent<Pitch>().strike < 2) {//out ball
 				pitcher.GetComponent<Pitch>().strike++;
 			}

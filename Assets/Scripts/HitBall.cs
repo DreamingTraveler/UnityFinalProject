@@ -70,6 +70,8 @@ public class HitBall : MonoBehaviour {
 			print (randomY);
 			ball.GetComponent<Rigidbody> ().velocity = (new Vector3 (hitting_point.x, randomY, hitting_point.z)).normalized * hitting_force;
 			field.GetComponent<Game> ().SetBall(ball);
+            field.GetComponent<SwitchCamera>().SwitchToBallCamera();
+            field.GetComponent<FollowBall>().SetBall(ball);
 		} else {
 			pitcher.GetComponent<Pitch> ().strike++;
 		}
