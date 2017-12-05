@@ -14,11 +14,12 @@ public class HitBall : MonoBehaviour {
 	public bool isSwing = false;
 	public bool canHitBall = false;
 	public Dictionary<string,string> forceTable = new Dictionary<string,string> ();
-	//Vector3 pitchPos = GameObject.Find ("Pitching_Point").transform.position;
+
+	private GameObject field;
 	// Use this for initialization
 	void Start () {
 		animator = GetComponent<Animator> ();
-		//ball = GameObject.FindGameObjectWithTag("Ball");
+		field = GameObject.Find ("Field");
 		pitcher = GameObject.FindGameObjectWithTag ("Pitcher");
 		hitting_point = GameObject.Find ("Hitting_Point");
 		CreateForceTable ();
@@ -55,14 +56,20 @@ public class HitBall : MonoBehaviour {
 			hitting_force = float.Parse(forceTable [ballPos]);
 		}
 	}
+
 	public void Swing(GameObject ball){
 		Vector3 pitchPos = GameObject.Find ("Pitching_Point").transform.position;
 		Vector3 hitting_point = GameObject.Find ("Hitting_Point").transform.position;
 		float ballHorPos = ball.transform.position.x + ball.transform.position.z;
+
+		isSwing = true;
 		print (ballHorPos.ToString("0.0"));
 		MatchForce (ballHorPos.ToString("0.0"));
 		if (CanHit (ball)) {
-			ball.GetComponent<Rigidbody> ().velocity = (new Vector3 (hitting_point.x, Input.mousePosition.y, hitting_point.z)).normalized * hitting_force;
+			float randomY = Random.Range (300f, 320f);
+			print (randomY);
+			ball.GetComponent<Rigidbody> ().velocity = (new Vector3 (hitting_point.x, randomY, hitting_point.z)).normalized * hitting_force;
+			field.GetComponent<Game> ().SetBall(ball);
 		} else {
 			pitcher.GetComponent<Pitch> ().strike++;
 		}

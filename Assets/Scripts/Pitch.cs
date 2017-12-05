@@ -30,6 +30,10 @@ public class Pitch : MonoBehaviour {
 	private GameObject cursor;
 	private MeshRenderer targetMesh;
 	private Button confirmBallPos;
+	private Button FourSeamBtn;
+	private Button SliderBtn;
+	private Button CutterBtn;
+	private Button ForkballBtn;
 	private Text StrikeBall;
 	private Text outNumText;
 	// Use this for initialization
@@ -44,6 +48,10 @@ public class Pitch : MonoBehaviour {
 		targetMesh = targetPoint.GetComponent<MeshRenderer> ();
 		cursor = GameObject.FindGameObjectWithTag ("Cursor");
 		confirmBallPos = GameObject.Find ("Confirm").GetComponent<Button>();
+		FourSeamBtn = GameObject.Find ("FourSeam").GetComponent<Button> ();
+		SliderBtn = GameObject.Find ("Slider").GetComponent<Button> ();
+		CutterBtn = GameObject.Find ("Cutter").GetComponent<Button> ();
+		ForkballBtn = GameObject.Find ("Forkball").GetComponent<Button> ();
 		StrikeBall = GameObject.Find ("StrikeBall").GetComponent<Text> ();
 		outNumText = GameObject.Find ("Out").GetComponent<Text> ();
 	}
@@ -53,13 +61,13 @@ public class Pitch : MonoBehaviour {
 		if (isPitching) {
 			CallHitter (cloneBall);
 			Vector3 ballPos = cloneBall.transform.position;
-			for(int i = 0; i < 50000; i++){
+			for (int i = 0; i < 50000; i++) {
 				if (ballPos.x + ballPos.z >= 405f && ballPos.x + ballPos.z <= 415f) {
 					RecordBallPos ();
 				}
 			}
 			StopBall (cloneBall);
-		}
+		} 
 			
 		if (canChooseBall) {
 			ChooseBallPosition ();
@@ -67,6 +75,7 @@ public class Pitch : MonoBehaviour {
 		} else {
 			targetMesh.enabled = false;
 			confirmBallPos.gameObject.SetActive (false);
+
 		}
 		StrikeBall.text = badBall + " - " + strike;
 		outNumText.text = "Out: " + outNum;
@@ -104,6 +113,7 @@ public class Pitch : MonoBehaviour {
 			JudgeBall ();
 			print (tempPos);
 			isPitching = false;
+			EnableChooseButton ();
 		}
 	}
 
@@ -114,34 +124,42 @@ public class Pitch : MonoBehaviour {
 
 	public void CallAnimate(){
 		canChooseBall = false;
-
+		DisableChooseButton ();
+		hitter.GetComponent<HitBall> ().isSwing = false;
 		Invoke ("PitchAnimate", 2.0f);
+	}
+
+	public void EnableChooseButton(){
+		FourSeamBtn.gameObject.SetActive (true);
+		SliderBtn.gameObject.SetActive (true);
+		CutterBtn.gameObject.SetActive (true);
+		ForkballBtn.gameObject.SetActive (true);
+	}
+
+	private void DisableChooseButton(){
+		FourSeamBtn.gameObject.SetActive (false);
+		SliderBtn.gameObject.SetActive (false);
+		CutterBtn.gameObject.SetActive (false);
+		ForkballBtn.gameObject.SetActive (false);
 	}
 
 	private void PitchAnimate(){
 		pitcherAnimator.SetTrigger ("isPitch");
 
-		hittingPoint.transform.position = new Vector3 (-260f, 19.3f, 726f);
-
+		hittingPoint.transform.position = new Vector3 (-511f, 19.3f, 995f);
 		Invoke ("PitchBall", 1.0f);
 	}
 
 	public void JudgeBall(){
 		Vector3 ballPos = tempPos;
-		if (ballPos.x >= 198.5 && ballPos.x <= 209.3f && ballPos.y >= 12.5f && ballPos.y <= 25f && ballPos.z >= 199.5f && ballPos.z <= 211f) {
-			strike++;
-		} else
-			badBall++;
-		if (strike == 3) {//strikeout!
-			outNum++;
-			strike = 0;
-			badBall = 0;
-		} else if (badBall == 4) {
-			strike = 0;
-			badBall = 0;
-            field.GetComponent<BaseCondition>().BaseStateMachine();
+		if (hitter.GetComponent<HitBall> ().isSwing == false) {
+			if (ballPos.x >= 198.5 && ballPos.x <= 209.3f && ballPos.y >= 12.5f && ballPos.y <= 25f && 
+				ballPos.z >= 199.5f && ballPos.z <= 211f) {
+				strike++;
+			} else {
+				badBall++;
+			}
 		}
-		//isPitching = false;
 	}
 
 	public void PitchBall(){
@@ -161,7 +179,7 @@ public class Pitch : MonoBehaviour {
 
 	public void SetModeAsFourSeam(){
 		ballMode = 0;
-		hittingPointMovingSpeed = 8000f;
+		hittingPointMovingSpeed = 9500f;
 		float randomSpeed = Random.Range (340f,360f);
 		speed = randomSpeed;
 	}
@@ -189,7 +207,7 @@ public class Pitch : MonoBehaviour {
 
 	private void CallHitter(GameObject cloneBall){
 		MoveHittingPoint (cloneBall);
-		if (Input.GetKeyDown ("space")) {
+		if (Input.GetKeyDown ("space") && hitter.GetComponent<HitBall>().isSwing == false) {
             hitter.GetComponent<HitBall>().Swing(cloneBall);
         }
 	}

@@ -9,6 +9,7 @@ TagManager:
   - Ball
   - Hitter
   - Cursor
+  - FourSeamBtn
   layers:
   - Default
   - TransparentFX
