@@ -5,13 +5,13 @@ using UnityEngine;
 public class FollowBall : MonoBehaviour {
     public Vector3 offset;
 
-    private GameObject ballCamera;
+    public GameObject ballCamera;
     private GameObject ball;
     private GameObject field;
 	// Use this for initialization
 	void Start () {
         field = GameObject.Find("Field");
-        ballCamera = GameObject.Find("Ball_Camera");
+        //ballCamera = GameObject.Find("Ball_Camera");
     }
 	
 	// Update is called once per frame

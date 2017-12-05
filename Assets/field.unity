@@ -870,9 +870,6 @@ MonoBehaviour:
   strike: 0
   badBall: 0
   outNum: 0
-  pitcherCamera: {fileID: 1344114030}
-  hitterCamera: {fileID: 64029274}
-  ballCamera: {fileID: 1177168333}
 --- !u!114 &464316600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2418,6 +2415,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   offset: {x: -95, y: 96, z: -98}
+  ballCamera: {fileID: 1177168329}
 --- !u!1 &1344114026
 GameObject:
   m_ObjectHideFlags: 0
