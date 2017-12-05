@@ -66,7 +66,7 @@ public class HitBall : MonoBehaviour {
 		print (ballHorPos.ToString("0.0"));
 		MatchForce (ballHorPos.ToString("0.0"));
 		if (CanHit (ball)) {
-			float randomY = Random.Range (300f, 320f);
+			float randomY = Random.Range (-120f, 820f);
 			print (randomY);
 			ball.GetComponent<Rigidbody> ().velocity = (new Vector3 (hitting_point.x, randomY, hitting_point.z)).normalized * hitting_force;
 			field.GetComponent<Game> ().SetBall(ball);
