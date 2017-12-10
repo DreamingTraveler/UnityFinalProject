@@ -114,11 +114,10 @@ public class Pitch : MonoBehaviour {
 		if (cloneBall.transform.position.x + cloneBall.transform.position.z < 336f) {
 			cloneBall.GetComponent<Rigidbody> ().velocity = new Vector3(0f,0f,0f) * 0f;
 			JudgeBall ();
-            print (tempPos);
+			print (tempPos);
 			isPitching = false;
 			EnableChooseButton ();
-            Destroy(GameObject.FindWithTag("Ball"));
-        }
+		}
 	}
 
 	public void ChooseBallType(){
