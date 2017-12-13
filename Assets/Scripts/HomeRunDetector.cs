@@ -20,5 +20,6 @@ public class HomeRunDetector : MonoBehaviour {
 		field.GetComponent<Game> ().AddPoint (playerOnBaseNum + 1);
 		gameObject.GetComponent<MeshRenderer> ().material.color = Color.red;
 		field.GetComponent<BaseCondition> ().SetBase ("Empty");
+        Debug.Log("HomeRun");
 	}
 }

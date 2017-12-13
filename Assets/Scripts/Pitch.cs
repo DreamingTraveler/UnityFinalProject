@@ -117,7 +117,6 @@ public class Pitch : MonoBehaviour {
             print (tempPos);
 			isPitching = false;
 			EnableChooseButton ();
-            Destroy(GameObject.FindWithTag("Ball"));
         }
 	}
 
@@ -171,13 +170,13 @@ public class Pitch : MonoBehaviour {
 	}
 
 	public void PitchBall(){
-		Vector3 pitchPos = GameObject.Find ("Pitching_Point").transform.position;																																										
+		Vector3 pitchPos = GameObject.Find ("Pitching_Point").transform.position;
 
-		cloneBall = Instantiate (ball) as GameObject;
-		cloneBall.name = "CloneBall";
-		cloneBall.transform.position = pitchPos;
+        cloneBall = Instantiate (ball) as GameObject;
+        cloneBall.name = "CloneBall";
+        cloneBall.transform.position = pitchPos;
 
-		cloneBall.GetComponent<Rigidbody> ().velocity = (targetPos - pitchPos).normalized * speed;
+        cloneBall.GetComponent<Rigidbody> ().velocity = (targetPos - pitchPos).normalized * speed;
 		if (ballMode != 0) {
 			gameObject.GetComponent<BreakBall> ().SetBreakBall (cloneBall, ballMode);
 		}
