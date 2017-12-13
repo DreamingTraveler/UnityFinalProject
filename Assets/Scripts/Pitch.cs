@@ -19,11 +19,11 @@ public class Pitch : MonoBehaviour {
 	public int strike;
 	public int badBall;
 	public int outNum;
-
 	private Vector3 pitchPos;
 	private Vector3 tempPos;
 
     private GameObject field;
+    [SerializeField]
 	private GameObject cloneBall;
 	private GameObject hitter;
 	private GameObject hittingPoint;
@@ -63,13 +63,18 @@ public class Pitch : MonoBehaviour {
 	void Update () {
 		if (isPitching) {
 			CallHitter (cloneBall);
-			Vector3 ballPos = cloneBall.transform.position;
-			for (int i = 0; i < 50000; i++) {
-				if (ballPos.x + ballPos.z >= 405f && ballPos.x + ballPos.z <= 415f) {
-					RecordBallPos ();
-				}
-			}
-			StopBall (cloneBall);
+            if (cloneBall)//detect cloneball exist
+            {
+                Vector3 ballPos = cloneBall.transform.position;
+                for (int i = 0; i < 50000; i++)
+                {
+                    if (ballPos.x + ballPos.z >= 405f && ballPos.x + ballPos.z <= 415f)
+                    {
+                        RecordBallPos();
+                    }
+                }
+                StopBall(cloneBall);
+            }
 		} 
 			
 		if (canChooseBall) {
@@ -141,6 +146,8 @@ public class Pitch : MonoBehaviour {
 		ForkballBtn.gameObject.SetActive (true);
         strikeZone.SetActive(true);
         field.GetComponent<SwitchCamera>().SwitchToPitcherCamera();
+        GameObject go = GameObject.FindGameObjectWithTag("Ball");
+        Destroy(go);
     }
 
 	private void DisableChooseButton(){
@@ -211,15 +218,17 @@ public class Pitch : MonoBehaviour {
 		float randomSpeed = Random.Range (260f,280f);
 		speed = 270f;
 	}
-
+    //
 	private void CallHitter(GameObject cloneBall){
 		MoveHittingPoint (cloneBall);
 		if (Input.GetKeyDown ("space") && hitter.GetComponent<HitBall>().isSwing == false) {
+            if(cloneBall!=null)
             hitter.GetComponent<HitBall>().Swing(cloneBall);
         }
 	}
 		
 	private void MoveHittingPoint(GameObject cloneBall){
+        if (!cloneBall) return;
 		if (/*cloneBall.transform.position.x + cloneBall.transform.position.z >= 347f &&
 			cloneBall.transform.position.x + cloneBall.transform.position.z <= 448f*/
 			hitter.GetComponent<HitBall>().CanHit(cloneBall)) {
