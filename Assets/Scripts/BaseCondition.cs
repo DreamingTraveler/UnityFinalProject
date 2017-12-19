@@ -21,8 +21,21 @@ public class BaseCondition : MonoBehaviour {
 
     }
 
-    public void BaseStateMachine() {
-		PushOneBase ();
+	public void BaseStateMachine(int baseNum) {
+		switch (baseNum) {
+		case 1:
+			PushOneBase ();
+			break;
+		case 2:
+			PushTwoBase ();
+			break;
+		case 3:
+			PushThreeBase ();
+			break;
+		default:
+			break;
+		}
+
     }
 
 	private void PushOneBase(){
@@ -37,12 +50,45 @@ public class BaseCondition : MonoBehaviour {
 		} else if (baseConditionNow == "Full") {
 			GameObject.Find ("Field").GetComponent<Game> ().AddPoint (1);
 		}
-		SetBase(baseConditionNow);
+		SetBase (baseConditionNow);
+	}
+
+	private void PushTwoBase(){
+		if (baseConditionNow == "Empty") {
+			baseConditionNow = "Two";
+		} else if (baseConditionNow == "One") {
+			baseConditionNow = "TwoThree";
+		} else if (baseConditionNow == "Two" || baseConditionNow == "Three") {
+			GameObject.Find ("Field").GetComponent<Game> ().AddPoint (1);
+		} else if (baseConditionNow == "OneThree" || baseConditionNow == "OneTwo") {
+			GameObject.Find ("Field").GetComponent<Game> ().AddPoint (1);
+			baseConditionNow = "TwoThree";
+		} else if (baseConditionNow == "TwoThree") {
+			GameObject.Find ("Field").GetComponent<Game> ().AddPoint (2);
+			baseConditionNow = "Two";
+		} else if (baseConditionNow == "Full") {
+			GameObject.Find ("Field").GetComponent<Game> ().AddPoint (2);
+			baseConditionNow = "TwoThree";
+		}
+		SetBase (baseConditionNow);
+	}
+
+	private void PushThreeBase(){
+		if (baseConditionNow == "One" || baseConditionNow == "Two" || baseConditionNow == "Three") {
+			GameObject.Find ("Field").GetComponent<Game> ().AddPoint (1);
+		} else if (baseConditionNow == "OneThree" || baseConditionNow == "OneTwo" || baseConditionNow == "TwoThree") {
+			GameObject.Find ("Field").GetComponent<Game> ().AddPoint (2);
+		} else if (baseConditionNow == "Full") {
+			GameObject.Find ("Field").GetComponent<Game> ().AddPoint (3);
+		}
+		baseConditionNow = "Three";
+		SetBase (baseConditionNow);
 	}
 
 	public void SetBase(string condition) {
         switch (condition){
-			case "Empty":
+		case "Empty":
+			    baseConditionNow = "Empty";
 				playerOnBaseNum = 0;
 				base1.GetComponent<MeshRenderer> ().material.color = Color.white;
 				base2.GetComponent<MeshRenderer> ().material.color = Color.white;

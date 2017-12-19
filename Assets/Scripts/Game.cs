@@ -9,6 +9,7 @@ public class Game : MonoBehaviour {
     public int inning = 1;
 	public bool isTopInning = true;
 	public string nowAttack = "visiting";
+	public bool isHitting = false;
 	public bool isBallFlying = false;
 
 	private GameObject HomeRunWall;
@@ -56,6 +57,7 @@ public class Game : MonoBehaviour {
 
 	private void ToNextHalfInning(){
 		pitcher.GetComponent<Pitch> ().outNum = 0;
+		gameObject.GetComponent<BaseCondition>().SetBase("Empty");
 		if (isTopInning) {//Top -> Bottom
 			nowAttack = "home";
 			isTopInning = false;
@@ -82,7 +84,7 @@ public class Game : MonoBehaviour {
             ToNextPlayer();
 		} else if (badBall == 4) {
             ToNextPlayer();
-			gameObject.GetComponent<BaseCondition> ().BaseStateMachine ();
+			gameObject.GetComponent<BaseCondition> ().BaseStateMachine (1);
 		}
 	}
 
@@ -94,10 +96,16 @@ public class Game : MonoBehaviour {
 	public void JudgeOutBall(){
 		if (ball.transform.position.y <= 1.0f) {//The ball falls to the field
 			isBallFlying = false;
-			if ((ball.transform.position.x < 200f || ball.transform.position.z < 200f) &&
-				pitcher.GetComponent<Pitch>().strike < 2) {//out ball
-				pitcher.GetComponent<Pitch>().strike++;
+			if ((ball.transform.position.x < 200f || ball.transform.position.z < 200f)) {//faul
+				if(pitcher.GetComponent<Pitch> ().strike < 2){
+					pitcher.GetComponent<Pitch> ().strike++;
+				}
+			} else if (!isHitting && (ball.transform.position.x > 200f && ball.transform.position.z > 200f)) {
+				pitcher.GetComponent<Pitch> ().outNum++;
+				ToNextPlayer();
 			}
+			isHitting = false;
+			pitcher.GetComponent<Pitch> ().cloneBall.SetActive (false);
 			pitcher.GetComponent<Pitch> ().EnableChooseButton ();
 		}
 	}

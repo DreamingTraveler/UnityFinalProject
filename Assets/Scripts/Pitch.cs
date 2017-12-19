@@ -8,6 +8,7 @@ public class Pitch : MonoBehaviour {
 	Animator ballAnimator;
 	public GameObject ball;
     public GameObject strikeZone;
+	public GameObject cloneBall;
 	public float speed;
 	public float w, h;
 	public bool isPitching = false;
@@ -24,7 +25,6 @@ public class Pitch : MonoBehaviour {
 	private Vector3 tempPos;
 
     private GameObject field;
-	private GameObject cloneBall;
 	private GameObject hitter;
 	private GameObject hittingPoint;
 	private GameObject targetPoint;
@@ -32,13 +32,14 @@ public class Pitch : MonoBehaviour {
 	private MeshRenderer targetMesh;
 
 	private Button confirmBallPos;
-	private Button FourSeamBtn;
-	private Button SliderBtn;
-	private Button CutterBtn;
-	private Button ForkballBtn;
+	private Button fourSeamBtn;
+	private Button sliderBtn;
+	private Button cutterBtn;
+	private Button forkballBtn;
 
-	private Text StrikeBall;
+	private Text strikeBall;
 	private Text outNumText;
+	private Text speedText;
     // Use this for initialization
     void Start () {
 		pitcherAnimator = GameObject.FindGameObjectWithTag("Pitcher").GetComponent<Animator> ();
@@ -51,12 +52,13 @@ public class Pitch : MonoBehaviour {
 		targetMesh = targetPoint.GetComponent<MeshRenderer> ();
 		cursor = GameObject.FindGameObjectWithTag ("Cursor");
 		confirmBallPos = GameObject.Find ("Confirm").GetComponent<Button>();
-		FourSeamBtn = GameObject.Find ("FourSeam").GetComponent<Button> ();
-		SliderBtn = GameObject.Find ("Slider").GetComponent<Button> ();
-		CutterBtn = GameObject.Find ("Cutter").GetComponent<Button> ();
-		ForkballBtn = GameObject.Find ("Forkball").GetComponent<Button> ();
-		StrikeBall = GameObject.Find ("StrikeBall").GetComponent<Text> ();
+		fourSeamBtn = GameObject.Find ("FourSeam").GetComponent<Button> ();
+		sliderBtn = GameObject.Find ("Slider").GetComponent<Button> ();
+		cutterBtn = GameObject.Find ("Cutter").GetComponent<Button> ();
+		forkballBtn = GameObject.Find ("Forkball").GetComponent<Button> ();
+		strikeBall = GameObject.Find ("StrikeBall").GetComponent<Text> ();
 		outNumText = GameObject.Find ("Out").GetComponent<Text> ();
+		speedText = GameObject.Find ("Speed").GetComponent<Text> ();
     }
 		
 	// Update is called once per frame
@@ -80,7 +82,7 @@ public class Pitch : MonoBehaviour {
 			confirmBallPos.gameObject.SetActive (false);
 
 		}
-		StrikeBall.text = badBall + " - " + strike;
+		strikeBall.text = badBall + " - " + strike;
 		outNumText.text = "Out: " + outNum;
 	}
 
@@ -117,6 +119,7 @@ public class Pitch : MonoBehaviour {
 			print (tempPos);
 			isPitching = false;
 			EnableChooseButton ();
+			Destroy (cloneBall);
 		}
 	}
 
@@ -135,19 +138,19 @@ public class Pitch : MonoBehaviour {
 	}
 
 	public void EnableChooseButton(){
-		FourSeamBtn.gameObject.SetActive (true);
-		SliderBtn.gameObject.SetActive (true);
-		CutterBtn.gameObject.SetActive (true);
-		ForkballBtn.gameObject.SetActive (true);
+		fourSeamBtn.gameObject.SetActive (true);
+		sliderBtn.gameObject.SetActive (true);
+		cutterBtn.gameObject.SetActive (true);
+		forkballBtn.gameObject.SetActive (true);
         strikeZone.SetActive(true);
         field.GetComponent<SwitchCamera>().SwitchToPitcherCamera();
     }
 
 	private void DisableChooseButton(){
-		FourSeamBtn.gameObject.SetActive (false);
-		SliderBtn.gameObject.SetActive (false);
-		CutterBtn.gameObject.SetActive (false);
-		ForkballBtn.gameObject.SetActive (false);
+		fourSeamBtn.gameObject.SetActive (false);
+		sliderBtn.gameObject.SetActive (false);
+		cutterBtn.gameObject.SetActive (false);
+		forkballBtn.gameObject.SetActive (false);
 	}
 
 	private void PitchAnimate(){
@@ -180,36 +183,32 @@ public class Pitch : MonoBehaviour {
 		if (ballMode != 0) {
 			gameObject.GetComponent<BreakBall> ().SetBreakBall (cloneBall, ballMode);
 		}
-
+		speedText.text = ((speed / 350)*105).ToString("0.0") + "mph";
 		isPitching = true;
 	}
 
 	public void SetModeAsFourSeam(){
 		ballMode = 0;
 		hittingPointMovingSpeed = 10000f;
-		float randomSpeed = Random.Range (340f,360f);
-		speed = randomSpeed;
+		speed = Random.Range (320f,350f);
 	}
 
 	public void SetModeAsSlider(){
 		ballMode = 1;
 		hittingPointMovingSpeed = 13000f;
-		float randomSpeed = Random.Range (260f,280f);
-		speed = randomSpeed;
+		speed = Random.Range (260f,280f);
 	}
 
 	public void SetModeAsCutter(){
 		ballMode = 2;
 		hittingPointMovingSpeed = 11200f;
-		float randomSpeed = Random.Range (310f,330f);
-		speed = randomSpeed;
+		speed = Random.Range (300f,320f);
 	}
 
 	public void SetModeAsFork(){
 		ballMode = 3;
 		hittingPointMovingSpeed = 13000f;
-		float randomSpeed = Random.Range (260f,280f);
-		speed = 270f;
+		speed = Random.Range (260f,280f);
 	}
 
 	private void CallHitter(GameObject cloneBall){

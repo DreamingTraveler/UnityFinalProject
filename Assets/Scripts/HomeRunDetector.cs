@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class HomeRunDetector : MonoBehaviour {
-
-	private GameObject field;
+	public GameObject field;
+	public GameObject pitcher;
 	// Use this for initialization
 	void Start () {
-		field = GameObject.Find ("Field");
+		
 	}
 	
 	// Update is called once per frame
@@ -20,5 +20,8 @@ public class HomeRunDetector : MonoBehaviour {
 		field.GetComponent<Game> ().AddPoint (playerOnBaseNum + 1);
 		gameObject.GetComponent<MeshRenderer> ().material.color = Color.red;
 		field.GetComponent<BaseCondition> ().SetBase ("Empty");
+		field.GetComponent<Game> ().ToNextPlayer();
+		pitcher.GetComponent<Pitch> ().cloneBall.SetActive (false);
+		pitcher.GetComponent<Pitch> ().EnableChooseButton ();
 	}
 }
