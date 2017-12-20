@@ -11,6 +11,7 @@ public class Game : MonoBehaviour {
 	public string nowAttack = "visiting";
 	public bool isHitting = false;
 	public bool isBallFlying = false;
+	public bool isBallCameraMoving = false;
 
 	private GameObject HomeRunWall;
 	private GameObject pitcher;
@@ -41,6 +42,7 @@ public class Game : MonoBehaviour {
 
 	public void SetBall(GameObject cloneBall){
 		isBallFlying = true;
+		isBallCameraMoving = true;
 		ball = cloneBall;
 	}
 
@@ -105,8 +107,13 @@ public class Game : MonoBehaviour {
 				ToNextPlayer();
 			}
 			isHitting = false;
-			pitcher.GetComponent<Pitch> ().cloneBall.SetActive (false);
-			pitcher.GetComponent<Pitch> ().EnableChooseButton ();
+			Invoke ("SwitchToPitcherCamera", 3.0f);
 		}
+	}
+
+	private void SwitchToPitcherCamera(){
+		isBallCameraMoving = false;
+		pitcher.GetComponent<Pitch> ().cloneBall.SetActive (false);
+		pitcher.GetComponent<Pitch> ().EnableChooseButton ();
 	}
 }

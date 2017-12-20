@@ -16,7 +16,7 @@ public class FollowBall : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (field.GetComponent<Game>().isBallFlying){
+		if (field.GetComponent<Game>().isBallCameraMoving){
             ballCamera.transform.position = ball.transform.position + offset;
         }
 	}
