@@ -18,7 +18,9 @@ public class HomeRunDetector : MonoBehaviour {
 	void OnCollisionEnter(Collision col){
 		int playerOnBaseNum = field.GetComponent<BaseCondition> ().playerOnBaseNum;
 		field.GetComponent<Game> ().AddPoint (playerOnBaseNum + 1);
+        field.GetComponent<Game> ().SetSituation ("HomeRun");
 		gameObject.GetComponent<MeshRenderer> ().material.color = Color.red;
 		field.GetComponent<BaseCondition> ().SetBase ("Empty");
+        field.GetComponent<SwitchCamera> ().SwitchToPitcherCamera();
 	}
 }

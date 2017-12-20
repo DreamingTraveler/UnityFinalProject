@@ -78,13 +78,13 @@ public class Pitch : MonoBehaviour {
 		} 
 			
 		if (canChooseBall) {
-			ChooseBallPosition ();
+            field.GetComponent<Game> ().SetSituation("Clear");
+            ChooseBallPosition ();
 			targetPoint.transform.position = targetPos;
 		} else {
 			targetMesh.enabled = false;
 			confirmBallPos.gameObject.SetActive (false);
-
-		}
+        }
 		StrikeBall.text = badBall + " - " + strike;
 		outNumText.text = "Out: " + outNum;
 	}
@@ -169,8 +169,10 @@ public class Pitch : MonoBehaviour {
 		if (hitter.GetComponent<HitBall> ().isSwing == false) {
 			if (ballPos.x >= 198.5 && ballPos.x <= 209.3f && ballPos.y >= 12.5f && ballPos.y <= 25f && 
 				ballPos.z >= 199.5f && ballPos.z <= 211f) {
+                field.GetComponent<Game> ().SetSituation("Strike");
 				strike++;
 			} else {
+                field.GetComponent<Game> ().SetSituation("Ball");
 				badBall++;
 			}
 		}

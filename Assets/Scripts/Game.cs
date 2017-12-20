@@ -8,7 +8,7 @@ public class Game : MonoBehaviour {
     public int visitingScore;
     public int inning = 1;
 	public bool isTopInning = true;
-	public string nowAttack = "visiting";
+	//public string nowAttack = "visiting";
 	public bool isBallFlying = false;
 
 	private GameObject HomeRunWall;
@@ -16,19 +16,24 @@ public class Game : MonoBehaviour {
 	private GameObject ball;
     private Text pointText;
 	private Text inningText;
+    private Text nowAttack;
+    private Text situation;
 	// Use this for initialization
 	void Start () {
 		pitcher = GameObject.FindGameObjectWithTag ("Pitcher");
         pointText = GameObject.Find("Point").GetComponent<Text>();
 		inningText = GameObject.Find ("Inning").GetComponent<Text> ();
+        nowAttack = GameObject.Find ("NowAttack").GetComponent<Text> ();
+        situation = GameObject.Find ("Situation").GetComponent<Text> ();
 		HomeRunWall = GameObject.Find ("HomerunWall");
+        nowAttack.text = "visiting";
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		SetText ();
 		if (pitcher.GetComponent<Pitch> ().outNum == 3) {
-			ToNextHalfInning ();
+            ToNextHalfInning ();
 		}
 
 		if (isBallFlying) {
@@ -57,19 +62,46 @@ public class Game : MonoBehaviour {
 	private void ToNextHalfInning(){
 		pitcher.GetComponent<Pitch> ().outNum = 0;
 		if (isTopInning) {//Top -> Bottom
-			nowAttack = "home";
+			nowAttack.text = "home";
 			isTopInning = false;
 		} else {//Bottom -> Top (Change Inning)
-			nowAttack = "visiting";
+			nowAttack.text = "visiting";
 			isTopInning = true;
 			inning++;
 		}
 	}
 
+    public void SetSituation(string occasion)
+    {
+        if (occasion == "Clear")
+            situation.text = "";
+
+        else if (occasion == "Strike")
+            situation.text = "Strike";
+        else if (occasion == "Ball")
+            situation.text = "Ball";
+
+        else if (occasion == "Single")
+            situation.text = "Single";
+        else if (occasion == "Double")
+            situation.text = "Double";
+        else if (occasion == "Triple")
+            situation.text = "Triple";
+        else if (occasion == "OutBall")
+            situation.text = "Out Ball";
+        else if (occasion == "HomeRun")
+            situation.text = "HomeRun";
+
+        else if (occasion == "StrileOut")
+            situation.text = "Strike Out";
+        else if (occasion == "BaseOnBall")
+            situation.text = "Base On Ball";
+    }
+
 	public void AddPoint(int point){
-		if (nowAttack == "home") {
+		if (nowAttack.text == "home") {
 			homeScore += point;
-		} else if (nowAttack == "visiting") {
+		} else if (nowAttack.text == "visiting") {
 			visitingScore += point;
 		}
 	}
@@ -78,9 +110,11 @@ public class Game : MonoBehaviour {
 		int strike = pitcher.GetComponent<Pitch> ().strike;
 		int badBall = pitcher.GetComponent<Pitch> ().badBall;
 		if (strike == 3) {//strikeout!
+            SetSituation("StrikeOut");
 			pitcher.GetComponent<Pitch>().outNum++;
             ToNextPlayer();
 		} else if (badBall == 4) {
+            SetSituation("BaseOnBall");
             ToNextPlayer();
 			gameObject.GetComponent<BaseCondition> ().BaseStateMachine ();
 		}
@@ -96,6 +130,7 @@ public class Game : MonoBehaviour {
 			isBallFlying = false;
 			if ((ball.transform.position.x < 200f || ball.transform.position.z < 200f) &&
 				pitcher.GetComponent<Pitch>().strike < 2) {//out ball
+                SetSituation("OutBall");
 				pitcher.GetComponent<Pitch>().strike++;
 			}
 			pitcher.GetComponent<Pitch> ().EnableChooseButton ();
