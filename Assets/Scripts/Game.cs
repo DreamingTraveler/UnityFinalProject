@@ -18,11 +18,13 @@ public class Game : MonoBehaviour {
 	private GameObject ball;
     private Text pointText;
 	private Text inningText;
+    private Text situation;
 	// Use this for initialization
 	void Start () {
 		pitcher = GameObject.FindGameObjectWithTag ("Pitcher");
         pointText = GameObject.Find("Point").GetComponent<Text>();
 		inningText = GameObject.Find ("Inning").GetComponent<Text> ();
+        situation = GameObject.Find ("Situation").GetComponent<Text> ();
 		HomeRunWall = GameObject.Find ("HomerunWall");
 	}
 	
@@ -70,7 +72,34 @@ public class Game : MonoBehaviour {
 		}
 	}
 
-	public void AddPoint(int point){
+    public void SetSituation(string occasion)
+    {
+        if (occasion == "Clear")
+            situation.text = "";
+
+        else if (occasion == "Strike")
+            situation.text = "Strike";
+        else if (occasion == "Ball")
+            situation.text = "Ball";
+
+        else if (occasion == "Single")
+            situation.text = "Single";
+        else if (occasion == "Double")
+            situation.text = "Double";
+        else if (occasion == "Triple")
+            situation.text = "Triple";
+        else if (occasion == "OutBall")
+            situation.text = "Out Ball";
+        else if (occasion == "HomeRun")
+            situation.text = "HomeRun";
+
+        else if (occasion == "StrileOut")
+            situation.text = "Strike Out";
+        else if (occasion == "BaseOnBall")
+            situation.text = "Base On Ball";
+    }
+
+    public void AddPoint(int point){
 		if (nowAttack == "home") {
 			homeScore += point;
 		} else if (nowAttack == "visiting") {
@@ -82,9 +111,11 @@ public class Game : MonoBehaviour {
 		int strike = pitcher.GetComponent<Pitch> ().strike;
 		int badBall = pitcher.GetComponent<Pitch> ().badBall;
 		if (strike == 3) {//strikeout!
+            SetSituation("Strike Out");
 			pitcher.GetComponent<Pitch>().outNum++;
             ToNextPlayer();
 		} else if (badBall == 4) {
+            SetSituation("BaseOnBall");
             ToNextPlayer();
 			gameObject.GetComponent<BaseCondition> ().BaseStateMachine (1);
 		}
@@ -99,6 +130,7 @@ public class Game : MonoBehaviour {
 		if (ball.transform.position.y <= 1.0f) {//The ball falls to the field
 			isBallFlying = false;
 			if ((ball.transform.position.x < 200f || ball.transform.position.z < 200f)) {//faul
+                SetSituation("OutBall");
 				if(pitcher.GetComponent<Pitch> ().strike < 2){
 					pitcher.GetComponent<Pitch> ().strike++;
 				}

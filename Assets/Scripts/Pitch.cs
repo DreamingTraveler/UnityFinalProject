@@ -75,7 +75,7 @@ public class Pitch : MonoBehaviour {
 		} 
 			
 		if (canChooseBall) {
-			ChooseBallPosition ();
+            ChooseBallPosition ();
 			targetPoint.transform.position = targetPos;
 		} else {
 			targetMesh.enabled = false;
@@ -86,7 +86,7 @@ public class Pitch : MonoBehaviour {
 	}
 
 	public void ChooseBallPosition(){
-		targetMesh.enabled = true;
+        targetMesh.enabled = true;
 		confirmBallPos.gameObject.SetActive (true);
 		if (Input.GetKey(KeyCode.UpArrow)) {
 			targetPos.y += 0.1f;
@@ -106,6 +106,11 @@ public class Pitch : MonoBehaviour {
 			targetPos.z -= 0.1f;
 		}
 	}
+
+    private void SetSituationClear()
+    {
+        field.GetComponent<Game> ().SetSituation ("Clear");
+    }
 
 	private void RecordBallPos(){
 		tempPos = cloneBall.transform.position;
@@ -143,6 +148,7 @@ public class Pitch : MonoBehaviour {
 		forkballBtn.gameObject.SetActive (true);
         strikeZone.SetActive(true);
         field.GetComponent<SwitchCamera>().SwitchToPitcherCamera();
+        Invoke("SetSituationClear", 1.0f);
         GameObject go = GameObject.FindGameObjectWithTag("Ball");
         Destroy(go);
     }
@@ -166,8 +172,10 @@ public class Pitch : MonoBehaviour {
 		if (hitter.GetComponent<HitBall> ().isSwing == false) {
 			if (ballPos.x >= 198.5 && ballPos.x <= 209.3f && ballPos.y >= 12.5f && ballPos.y <= 25f && 
 				ballPos.z >= 199.5f && ballPos.z <= 211f) {
+                field.GetComponent<Game> ().SetSituation("Strike");
 				strike++;
 			} else {
+                field.GetComponent<Game> ().SetSituation("Ball");
 				badBall++;
 			}
 		}
