@@ -66,8 +66,8 @@ public class Pitch : MonoBehaviour {
 		if (isPitching) {
 			CallHitter (cloneBall);
             Vector3 ballPos = cloneBall.transform.position;
-            for (int i = 0; i < 50000; i++){
-                if (ballPos.x + ballPos.z >= 405f && ballPos.x + ballPos.z <= 415f) {
+            for (int i = 0; i < 100000; i++){
+                if (ballPos.x + ballPos.z >= 404.5f && ballPos.x + ballPos.z <= 415.5f) {
                     RecordBallPos();
                 }
             }
@@ -170,9 +170,8 @@ public class Pitch : MonoBehaviour {
 	public void JudgeBall(){
 		Vector3 ballPos = tempPos;
 		if (hitter.GetComponent<HitBall> ().isSwing == false) {
-			if (ballPos.x >= 198.5 && ballPos.x <= 209.3f && ballPos.y >= 12.5f && ballPos.y <= 25f && 
-				ballPos.z >= 199.5f && ballPos.z <= 211f) {
-                field.GetComponent<Game> ().SetSituation("Strike");
+			if (ballPos.x >= 198.5f && ballPos.x <= 209.3f && ballPos.y >= 12.5f && ballPos.y <= 25f && 
+				ballPos.z >= 199.5f && ballPos.z <= 210.6f) {
 				strike++;
 			} else {
                 field.GetComponent<Game> ().SetSituation("Ball");

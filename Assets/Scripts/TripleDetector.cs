@@ -21,6 +21,7 @@ public class TripleDetector : MonoBehaviour {
 			field.GetComponent<BaseCondition> ().BaseStateMachine(3);
 			field.GetComponent<Game> ().isHitting = true;
 			field.GetComponent<Game> ().ToNextPlayer();
+			field.GetComponent<Game>().isBallFlying = false;
 			Invoke ("SwitchToPitcherCamera", 3.0f);
 		}
 	}

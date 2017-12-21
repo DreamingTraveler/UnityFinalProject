@@ -21,6 +21,7 @@ public class SingleDetector : MonoBehaviour {
 			field.GetComponent<BaseCondition> ().BaseStateMachine(1);
 			field.GetComponent<Game> ().isHitting = true;
 			field.GetComponent<Game> ().ToNextPlayer();
+			field.GetComponent<Game>().isBallFlying = false;
 			Invoke ("SwitchToPitcherCamera", 3.0f);
 		}
 	}
