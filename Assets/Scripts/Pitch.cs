@@ -147,6 +147,7 @@ public class Pitch : MonoBehaviour {
 		cutterBtn.gameObject.SetActive (true);
 		forkballBtn.gameObject.SetActive (true);
         strikeZone.SetActive(true);
+		field.GetComponent<Game>().isHitting = false;
         field.GetComponent<SwitchCamera>().SwitchToPitcherCamera();
         Invoke("SetSituationClear", 1.0f);
         GameObject go = GameObject.FindGameObjectWithTag("Ball");

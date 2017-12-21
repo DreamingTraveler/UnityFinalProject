@@ -138,7 +138,7 @@ public class Game : MonoBehaviour {
 				pitcher.GetComponent<Pitch> ().outNum++;
 				ToNextPlayer();
 			}
-			isHitting = false;
+
 			Invoke ("SwitchToPitcherCamera", 3.0f);
 		}
 	}
