@@ -60,6 +60,7 @@ public class BaseCondition : MonoBehaviour {
 			baseConditionNow = "TwoThree";
 		} else if (baseConditionNow == "Two" || baseConditionNow == "Three") {
 			GameObject.Find ("Field").GetComponent<Game> ().AddPoint (1);
+			baseConditionNow = "Two";
 		} else if (baseConditionNow == "OneThree" || baseConditionNow == "OneTwo") {
 			GameObject.Find ("Field").GetComponent<Game> ().AddPoint (1);
 			baseConditionNow = "TwoThree";

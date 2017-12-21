@@ -21,6 +21,7 @@ public class HomeRunDetector : MonoBehaviour {
 		gameObject.GetComponent<MeshRenderer> ().material.color = Color.red;
 		field.GetComponent<BaseCondition> ().SetBase ("Empty");
 		field.GetComponent<Game> ().ToNextPlayer();
+		field.GetComponent<Game>().isBallFlying = false;
 		Invoke ("SwitchToPitcherCamera", 1.5f);
 	}
 
