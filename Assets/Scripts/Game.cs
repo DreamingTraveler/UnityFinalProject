@@ -157,6 +157,7 @@ public class Game : MonoBehaviour
             if ((ball.transform.position.x < 200f || ball.transform.position.z < 200f))
             {//faul
                 SetSituation("OutBall");
+<<<<<<< HEAD
                 if (pitcher.GetComponent<Pitch>().strike < 2)
                 {
                     pitcher.GetComponent<Pitch>().strike++;
@@ -179,4 +180,23 @@ public class Game : MonoBehaviour
         pitcher.GetComponent<Pitch>().EnableChooseButton();
         SetSituation("Clear");
     }
+=======
+				if(pitcher.GetComponent<Pitch> ().strike < 2){
+					pitcher.GetComponent<Pitch> ().strike++;
+				}
+			} else if (!isHitting && (ball.transform.position.x > 200f && ball.transform.position.z > 200f)) {
+				pitcher.GetComponent<Pitch> ().outNum++;
+				ToNextPlayer();
+			}
+
+			Invoke ("SwitchToPitcherCamera", 3.0f);
+		}
+	}
+
+	private void SwitchToPitcherCamera(){
+		isBallCameraMoving = false;
+		pitcher.GetComponent<Pitch> ().cloneBall.SetActive (false);
+		pitcher.GetComponent<Pitch> ().EnableChooseButton ();
+	}
+>>>>>>> 93248053294fee4d62352ceb0f74be52b0cc4be7
 }

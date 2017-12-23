@@ -21,6 +21,7 @@ public class DoubleDetector : MonoBehaviour {
 			field.GetComponent<BaseCondition> ().BaseStateMachine(2);
 			field.GetComponent<Game> ().isHitting = true;
 			field.GetComponent<Game> ().ToNextPlayer();
+			field.GetComponent<Game>().isBallFlying = false;
 			Invoke ("SwitchToPitcherCamera", 3.0f);
 		}
 	}
