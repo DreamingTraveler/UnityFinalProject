@@ -20,6 +20,8 @@ public class Pitch : MonoBehaviour {
 	public int strike;
 	public int badBall;
 	public int outNum;
+	public GameObject scoreCanvas;
+	public Camera pitcherCamera;
 	private Vector3 pitchPos;
 	private Vector3 tempPos;
 
@@ -29,6 +31,7 @@ public class Pitch : MonoBehaviour {
 	private GameObject hittingPoint;
 	private GameObject targetPoint;
 	private GameObject cursor;
+	private GameObject ballPositionImage;
 	private MeshRenderer targetMesh;
 
 	private Button confirmBallPos;
@@ -51,6 +54,7 @@ public class Pitch : MonoBehaviour {
 		targetPos = targetPoint.transform.position;
 		targetMesh = targetPoint.GetComponent<MeshRenderer> ();
 		cursor = GameObject.FindGameObjectWithTag ("Cursor");
+		ballPositionImage = GameObject.Find ("BallPosition");
 		confirmBallPos = GameObject.Find ("Confirm").GetComponent<Button>();
 		fourSeamBtn = GameObject.Find ("FourSeam").GetComponent<Button> ();
 		sliderBtn = GameObject.Find ("Slider").GetComponent<Button> ();
@@ -129,6 +133,7 @@ public class Pitch : MonoBehaviour {
 
 	public void ChooseBallType(){
 		canChooseBall = true;
+		targetPos = new Vector3 (202.88f, 20.3f, 205f);
 		hitter.GetComponent<HitBall> ().hitting_force = 0;
 	}
 
@@ -136,6 +141,7 @@ public class Pitch : MonoBehaviour {
 		canChooseBall = false;
 		DisableChooseButton ();
 		hitter.GetComponent<HitBall> ().isSwing = false;
+		scoreCanvas.SetActive (false);
         field.GetComponent<SwitchCamera>().SwitchToHitterCamera();
         strikeZone.SetActive(false);
 		Invoke ("PitchAnimate", 2.0f);
@@ -148,10 +154,9 @@ public class Pitch : MonoBehaviour {
 		forkballBtn.gameObject.SetActive (true);
         strikeZone.SetActive(true);
 		field.GetComponent<Game>().isHitting = false;
+		scoreCanvas.SetActive (true);
         field.GetComponent<SwitchCamera>().SwitchToPitcherCamera();
         Invoke("SetSituationClear", 1.0f);
-        GameObject go = GameObject.FindGameObjectWithTag("Ball");
-        Destroy(go);
     }
 
 	private void DisableChooseButton(){
@@ -170,6 +175,7 @@ public class Pitch : MonoBehaviour {
 
 	public void JudgeBall(){
 		Vector3 ballPos = tempPos;
+		ballPositionImage.transform.position = pitcherCamera.WorldToScreenPoint(ballPos);
 		if (hitter.GetComponent<HitBall> ().isSwing == false) {
 			if (ballPos.x >= 198.5f && ballPos.x <= 209.3f && ballPos.y >= 12.5f && ballPos.y <= 25f && 
 				ballPos.z >= 199.5f && ballPos.z <= 210.6f) {
@@ -179,8 +185,13 @@ public class Pitch : MonoBehaviour {
 				badBall++;
 			}
 		}
+		Invoke ("ChangeImagePosition", 1.5f);
 	}
 
+	private void ChangeImagePosition(){
+		ballPositionImage.transform.position = new Vector3 (-10 ,-10, -10);
+	}
+		
 	public void PitchBall(){
 		Vector3 pitchPos = GameObject.Find ("Pitching_Point").transform.position;																																										
 
@@ -219,7 +230,7 @@ public class Pitch : MonoBehaviour {
 		hittingPointMovingSpeed = 13000f;
 		speed = Random.Range (260f,280f);
 	}
-    //
+    
 	private void CallHitter(GameObject cloneBall){
 		MoveHittingPoint (cloneBall);
 		if (Input.GetKeyDown ("space") && hitter.GetComponent<HitBall>().isSwing == false) {

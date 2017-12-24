@@ -16,15 +16,21 @@ public class Game : MonoBehaviour {
 	private GameObject HomeRunWall;
 	private GameObject pitcher;
 	private GameObject ball;
-    private Text pointText;
+    private Text homePointText;
+	private Text visitingPointText;
 	private Text inningText;
+	private Text topInningText;
+	private Text bottomInningText;
     private Text situation;
 	// Use this for initialization
 	void Start () {
 		pitcher = GameObject.FindGameObjectWithTag ("Pitcher");
-        pointText = GameObject.Find("Point").GetComponent<Text>();
+		homePointText = GameObject.Find("HomePoint").GetComponent<Text>();
+		visitingPointText = GameObject.Find("VisitingPoint").GetComponent<Text>();
 		inningText = GameObject.Find ("Inning").GetComponent<Text> ();
         situation = GameObject.Find ("Situation").GetComponent<Text> ();
+		topInningText = GameObject.Find ("TopInning").GetComponent<Text> ();
+		bottomInningText = GameObject.Find ("BottomInning").GetComponent<Text> ();
 		HomeRunWall = GameObject.Find ("HomerunWall");
 	}
 	
@@ -49,14 +55,16 @@ public class Game : MonoBehaviour {
 	}
 
 	private void SetText(){
-		pointText.text = homeScore + " - " + visitingScore;
-		string topBottomSign;
+		homePointText.text = homeScore.ToString();
+		visitingPointText.text = visitingScore.ToString();
 		if (isTopInning) {
-			topBottomSign = "△";
+			topInningText.text = "▲";
+			bottomInningText.text = "";
 		} else {
-			topBottomSign = "▽";
+			topInningText.text = "";
+			bottomInningText.text = "▼";
 		}
-		inningText.text = inning + " " + topBottomSign;
+		inningText.text = inning.ToString();
 	}
 
 	private void ToNextHalfInning(){
