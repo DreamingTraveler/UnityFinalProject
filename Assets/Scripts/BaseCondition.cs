@@ -1,11 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BaseCondition : MonoBehaviour {
     private GameObject base1;
     private GameObject base2;
     private GameObject base3;
+
+	public Image baseImage1;
+	public Image baseImage2;
+	public Image baseImage3;
 
     public string baseConditionNow = "Empty";
 	public int playerOnBaseNum = 0;
@@ -89,54 +94,78 @@ public class BaseCondition : MonoBehaviour {
 	public void SetBase(string condition) {
         switch (condition){
 		case "Empty":
-			    baseConditionNow = "Empty";
-				playerOnBaseNum = 0;
-				base1.GetComponent<MeshRenderer> ().material.color = Color.white;
-				base2.GetComponent<MeshRenderer> ().material.color = Color.white;
-				base3.GetComponent<MeshRenderer> ().material.color = Color.white;
-                break;
-			case "One":
-				base1.GetComponent<MeshRenderer> ().material.color = Color.red;
-				base2.GetComponent<MeshRenderer> ().material.color = Color.white;
-				base3.GetComponent<MeshRenderer> ().material.color = Color.white;
-				playerOnBaseNum = 1;
-                break;
-            case "Two":
-                base1.GetComponent<MeshRenderer>().material.color = Color.white;
-                base2.GetComponent<MeshRenderer>().material.color = Color.red;
-                base3.GetComponent<MeshRenderer>().material.color = Color.white;
-				playerOnBaseNum = 1;
-                break;
-            case "Three":
-                base1.GetComponent<MeshRenderer>().material.color = Color.white;
-                base2.GetComponent<MeshRenderer>().material.color = Color.white;
-                base3.GetComponent<MeshRenderer>().material.color = Color.red;
-				playerOnBaseNum = 1;
-                break;
-            case "OneTwo":
-                base1.GetComponent<MeshRenderer>().material.color = Color.red;
-                base2.GetComponent<MeshRenderer>().material.color = Color.red;
-                base3.GetComponent<MeshRenderer>().material.color = Color.white;
-				playerOnBaseNum = 2;
-                break;
-            case "OneThree":
-                base1.GetComponent<MeshRenderer>().material.color = Color.red;
-                base2.GetComponent<MeshRenderer>().material.color = Color.white;
-                base3.GetComponent<MeshRenderer>().material.color = Color.red;
-				playerOnBaseNum = 2;
-                break;
-            case "TwoThree":
-                base1.GetComponent<MeshRenderer>().material.color = Color.white;
-                base2.GetComponent<MeshRenderer>().material.color = Color.red;
-                base3.GetComponent<MeshRenderer>().material.color = Color.red;
-				playerOnBaseNum = 2;
-                break;
-            case "Full":
-                base1.GetComponent<MeshRenderer>().material.color = Color.red;
-                base2.GetComponent<MeshRenderer>().material.color = Color.red;
-                base3.GetComponent<MeshRenderer>().material.color = Color.red;
-				playerOnBaseNum = 3;
-                break;
+			baseConditionNow = "Empty";
+			playerOnBaseNum = 0;
+			base1.GetComponent<MeshRenderer> ().material.color = Color.white;
+			base2.GetComponent<MeshRenderer> ().material.color = Color.white;
+			base3.GetComponent<MeshRenderer> ().material.color = Color.white;
+			baseImage1.GetComponent<Image> ().color = Color.white;
+			baseImage2.GetComponent<Image> ().color = Color.white;
+			baseImage3.GetComponent<Image> ().color = Color.white;
+            break;
+		case "One":
+			base1.GetComponent<MeshRenderer> ().material.color = Color.red;
+			base2.GetComponent<MeshRenderer> ().material.color = Color.white;
+			base3.GetComponent<MeshRenderer> ().material.color = Color.white;
+			baseImage1.GetComponent<Image> ().color = Color.red;
+			baseImage2.GetComponent<Image> ().color = Color.white;
+			baseImage3.GetComponent<Image> ().color = Color.white;
+			playerOnBaseNum = 1;
+            break;
+        case "Two":
+            base1.GetComponent<MeshRenderer>().material.color = Color.white;
+            base2.GetComponent<MeshRenderer>().material.color = Color.red;
+            base3.GetComponent<MeshRenderer>().material.color = Color.white;
+			baseImage1.GetComponent<Image> ().color = Color.white;
+			baseImage2.GetComponent<Image> ().color = Color.red;
+			baseImage3.GetComponent<Image> ().color = Color.white;
+		    playerOnBaseNum = 1;
+            break;
+        case "Three":
+            base1.GetComponent<MeshRenderer>().material.color = Color.white;
+            base2.GetComponent<MeshRenderer>().material.color = Color.white;
+            base3.GetComponent<MeshRenderer>().material.color = Color.red;
+			baseImage1.GetComponent<Image> ().color = Color.white;
+			baseImage2.GetComponent<Image> ().color = Color.white;
+			baseImage3.GetComponent<Image> ().color = Color.red;
+		    playerOnBaseNum = 1;
+            break;
+        case "OneTwo":
+			base1.GetComponent<MeshRenderer>().material.color = Color.red;
+			base2.GetComponent<MeshRenderer>().material.color = Color.red;
+			base3.GetComponent<MeshRenderer>().material.color = Color.white;
+			baseImage1.GetComponent<Image> ().color = Color.red;
+			baseImage2.GetComponent<Image> ().color = Color.red;
+			baseImage3.GetComponent<Image> ().color = Color.white;
+			playerOnBaseNum = 2;
+			break;
+		case "OneThree":
+			base1.GetComponent<MeshRenderer>().material.color = Color.red;
+			base2.GetComponent<MeshRenderer>().material.color = Color.white;
+			base3.GetComponent<MeshRenderer>().material.color = Color.red;
+			baseImage1.GetComponent<Image> ().color = Color.red;
+			baseImage2.GetComponent<Image> ().color = Color.white;
+			baseImage3.GetComponent<Image> ().color = Color.red;
+			playerOnBaseNum = 2;
+			break;    
+		case "TwoThree":
+			base1.GetComponent<MeshRenderer>().material.color = Color.white;
+			base2.GetComponent<MeshRenderer>().material.color = Color.red;
+			base3.GetComponent<MeshRenderer>().material.color = Color.red;
+			baseImage1.GetComponent<Image> ().color = Color.white;
+			baseImage2.GetComponent<Image> ().color = Color.red;
+			baseImage3.GetComponent<Image> ().color = Color.red;
+			playerOnBaseNum = 2;
+			break;
+		case "Full":
+			base1.GetComponent<MeshRenderer>().material.color = Color.red;
+			base2.GetComponent<MeshRenderer>().material.color = Color.red;
+			base3.GetComponent<MeshRenderer>().material.color = Color.red;
+			baseImage1.GetComponent<Image> ().color = Color.red;
+			baseImage2.GetComponent<Image> ().color = Color.red;
+			baseImage3.GetComponent<Image> ().color = Color.red;
+			playerOnBaseNum = 3;
+			break;   
         }
     }
 }
