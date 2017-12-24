@@ -16,7 +16,8 @@ public class DoubleDetector : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision col){
-		if (field.GetComponent<Game> ().isBallFlying) {
+		if (field.GetComponent<Game> ().isBallFlying &&
+			GameObject.Find("Hitter").GetComponent<HitBall>().randomY <= 600) {
 			gameObject.GetComponent<MeshRenderer> ().material.color = Color.green;
 			field.GetComponent<BaseCondition> ().BaseStateMachine(2);
 			field.GetComponent<Game> ().isHitting = true;

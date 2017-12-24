@@ -11,6 +11,7 @@ public class HitBall : MonoBehaviour {
 	Rigidbody rig;
 
 	public float hitting_force;
+	public float randomY;
 	public bool isSwing = false;
 	public bool canHitBall = false;
 	public Dictionary<string,string> forceTable = new Dictionary<string,string> ();
@@ -66,7 +67,7 @@ public class HitBall : MonoBehaviour {
 		print (ballHorPos.ToString("0.0"));
 		MatchForce (ballHorPos.ToString("0.0"));
 		if (CanHit (ball)) {
-			float randomY = Random.Range (-200f, 720f);
+			randomY = Random.Range (-200f, 720f);
 			print (randomY);
 			ball.GetComponent<Rigidbody> ().velocity = (new Vector3 (hitting_point.x, randomY, hitting_point.z)).normalized * hitting_force;
 			field.GetComponent<Game> ().SetBall(ball);

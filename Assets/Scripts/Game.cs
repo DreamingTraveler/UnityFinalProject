@@ -163,7 +163,8 @@ public class Game : MonoBehaviour
                     pitcher.GetComponent<Pitch>().strike++;
                 }
             }
-            else if (!isHitting && (ball.transform.position.x > 200f && ball.transform.position.z > 200f))
+			else if ((!isHitting && (ball.transform.position.x > 200f && ball.transform.position.z > 200f)) ||
+				GameObject.Find("Hitter").GetComponent<HitBall>().randomY > 600)
             {
                 pitcher.GetComponent<Pitch>().outNum++;
                 ToNextPlayer();
