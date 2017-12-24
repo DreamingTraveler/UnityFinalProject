@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Game : MonoBehaviour
 {
@@ -45,8 +46,14 @@ public class Game : MonoBehaviour
 		if (isBallFlying) {
 			JudgeOutBall ();
 		}
-
 		StrikeoutAndFourBall ();
+		JudgeWinner ();
+	}
+
+	private void JudgeWinner(){
+		if(inning > 6){
+			SceneManager.LoadScene (1);
+		}
 	}
 
 	public void SetBall(GameObject cloneBall){
