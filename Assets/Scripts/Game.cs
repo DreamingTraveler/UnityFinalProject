@@ -8,7 +8,6 @@ public class Game : MonoBehaviour
     public int homeScore;
     public int visitingScore;
     public int inning = 1;
-<<<<<<< HEAD
 	public bool isTopInning = true;
 	public string nowAttack = "visiting";
 	public bool isHitting = false;
