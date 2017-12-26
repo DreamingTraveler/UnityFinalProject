@@ -23,13 +23,18 @@ public class DoubleDetector : MonoBehaviour {
 			field.GetComponent<Game> ().isHitting = true;
 			field.GetComponent<Game> ().ToNextPlayer();
 			field.GetComponent<Game>().isBallFlying = false;
-			Invoke ("SwitchToPitcherCamera", 3.0f);
+			Invoke ("SwitchCamera", 3.0f);
 		}
 	}
 
-	private void SwitchToPitcherCamera(){
+	private void SwitchCamera(){
 		field.GetComponent<Game>().isBallCameraMoving = false;
 		pitcher.GetComponent<Pitch> ().cloneBall.SetActive (false);
-		pitcher.GetComponent<Pitch> ().EnableChooseButton ();
+		if (field.GetComponent<Game>().nowAttack == "visiting") {
+			pitcher.GetComponent<Pitch> ().EnableReadyBtn ();
+			field.GetComponent<SwitchCamera>().SwitchToHitterCamera();
+		} else {
+			pitcher.GetComponent<Pitch>().EnableChooseButton();
+		}
 	}
 }

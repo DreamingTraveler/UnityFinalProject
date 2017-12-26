@@ -20,8 +20,8 @@ public class Pitch : MonoBehaviour {
 	public int strike;
 	public int badBall;
 	public int outNum;
-	public GameObject scoreCanvas;
 	public Camera pitcherCamera;
+	public Camera hitterCamera;
 	private Vector3 pitchPos;
 	private Vector3 tempPos;
 
@@ -39,6 +39,7 @@ public class Pitch : MonoBehaviour {
 	private Button sliderBtn;
 	private Button cutterBtn;
 	private Button forkballBtn;
+	private Button readyToHitBtn;
 
 	private Text strikeBall;
 	private Text outNumText;
@@ -55,11 +56,14 @@ public class Pitch : MonoBehaviour {
 		targetMesh = targetPoint.GetComponent<MeshRenderer> ();
 		cursor = GameObject.FindGameObjectWithTag ("Cursor");
 		ballPositionImage = GameObject.Find ("BallPosition");
+
 		confirmBallPos = GameObject.Find ("Confirm").GetComponent<Button>();
 		fourSeamBtn = GameObject.Find ("FourSeam").GetComponent<Button> ();
 		sliderBtn = GameObject.Find ("Slider").GetComponent<Button> ();
 		cutterBtn = GameObject.Find ("Cutter").GetComponent<Button> ();
 		forkballBtn = GameObject.Find ("Forkball").GetComponent<Button> ();
+		readyToHitBtn = GameObject.Find ("Ready").GetComponent<Button> ();
+
 		strikeBall = GameObject.Find ("StrikeBall").GetComponent<Text> ();
 		outNumText = GameObject.Find ("Out").GetComponent<Text> ();
 		speedText = GameObject.Find ("Speed").GetComponent<Text> ();
@@ -77,6 +81,13 @@ public class Pitch : MonoBehaviour {
             }
             StopBall(cloneBall);
 		} 
+
+		if (field.GetComponent<Game> ().nowAttack == "visiting") {
+			strikeZone.SetActive(false);
+			DisableChooseButton ();
+		} else {
+			readyToHitBtn.gameObject.SetActive (false);
+		}
 			
 		if (canChooseBall) {
             ChooseBallPosition ();
@@ -87,6 +98,28 @@ public class Pitch : MonoBehaviour {
 		}
 		strikeBall.text = badBall + " - " + strike;
 		outNumText.text = "Out: " + outNum;
+	}
+	/*
+	if (ballPos.x >= 198.5f && ballPos.x <= 209.3f && ballPos.y >= 12.5f && ballPos.y <= 25f && 
+		ballPos.z >= 199.5f && ballPos.z <= 210.6f) {
+		strike++;
+	}
+    */
+	public void AutoPitch(){
+		float randomNumForBallType = Random.Range (1f, 100f);
+
+		targetPos = new Vector3(Random.Range(195f, 215f), Random.Range(13f,27f), Random.Range(195f,210f));
+		if (randomNumForBallType < 50f) {
+			SetModeAsFourSeam ();
+		} else if (randomNumForBallType >= 50f && randomNumForBallType < 67f) {
+			SetModeAsSlider ();
+		} else if (randomNumForBallType >= 67f && randomNumForBallType < 84f) {
+			SetModeAsCutter ();
+		} else {
+			SetModeAsFork ();
+		}
+		readyToHitBtn.gameObject.SetActive (false);
+		CallAnimate ();
 	}
 
 	public void ChooseBallPosition(){
@@ -126,23 +159,35 @@ public class Pitch : MonoBehaviour {
 			JudgeBall ();
 			print (tempPos);
 			isPitching = false;
-			EnableChooseButton ();
+			SetCamera ();
+			EnableReadyBtn ();
 			Destroy (cloneBall);
+		}
+	}
+
+	public void EnableReadyBtn(){
+		readyToHitBtn.gameObject.SetActive (true);
+	}
+
+	private void SetCamera(){
+		if(field.GetComponent<Game>().nowAttack == "visiting"){
+			field.GetComponent<SwitchCamera>().SwitchToHitterCamera();
+		}else{
+			EnableChooseButton ();
 		}
 	}
 
 	public void ChooseBallType(){
 		canChooseBall = true;
 		targetPos = new Vector3 (202.88f, 20.3f, 205f);
-		hitter.GetComponent<HitBall> ().hitting_force = 0;
 	}
 
 	public void CallAnimate(){
 		canChooseBall = false;
 		DisableChooseButton ();
+		hitter.GetComponent<HitBall> ().hitting_force = 0;
 		hitter.GetComponent<HitBall> ().isSwing = false;
-		scoreCanvas.SetActive (false);
-        field.GetComponent<SwitchCamera>().SwitchToHitterCamera();
+        //field.GetComponent<SwitchCamera>().SwitchToHitterCamera();
         strikeZone.SetActive(false);
 		Invoke ("PitchAnimate", 2.0f);
 	}
@@ -154,12 +199,11 @@ public class Pitch : MonoBehaviour {
 		forkballBtn.gameObject.SetActive (true);
         strikeZone.SetActive(true);
 		field.GetComponent<Game>().isHitting = false;
-		scoreCanvas.SetActive (true);
         field.GetComponent<SwitchCamera>().SwitchToPitcherCamera();
         Invoke("SetSituationClear", 1.0f);
     }
 
-	private void DisableChooseButton(){
+	public void DisableChooseButton(){
 		fourSeamBtn.gameObject.SetActive (false);
 		sliderBtn.gameObject.SetActive (false);
 		cutterBtn.gameObject.SetActive (false);
@@ -175,7 +219,12 @@ public class Pitch : MonoBehaviour {
 
 	public void JudgeBall(){
 		Vector3 ballPos = tempPos;
-		ballPositionImage.transform.position = pitcherCamera.WorldToScreenPoint(ballPos);
+		if (field.GetComponent<Game> ().nowAttack == "visiting") {
+			ballPositionImage.transform.position = hitterCamera.WorldToScreenPoint(ballPos);
+		} else {
+			ballPositionImage.transform.position = pitcherCamera.WorldToScreenPoint(ballPos);
+		}
+			
 		if (hitter.GetComponent<HitBall> ().isSwing == false) {
 			if (ballPos.x >= 198.5f && ballPos.x <= 209.3f && ballPos.y >= 12.5f && ballPos.y <= 25f && 
 				ballPos.z >= 199.5f && ballPos.z <= 210.6f) {

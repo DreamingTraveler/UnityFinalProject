@@ -80,9 +80,11 @@ public class Game : MonoBehaviour
 		gameObject.GetComponent<BaseCondition>().SetBase("Empty");
 		if (isTopInning) {//Top -> Bottom
 			nowAttack = "home";
+			gameObject.GetComponent<SwitchCamera> ().SwitchToPitcherCamera ();
 			isTopInning = false;
 		} else {//Bottom -> Top (Change Inning)
 			nowAttack = "visiting";
+			gameObject.GetComponent<SwitchCamera> ().SwitchToHitterCamera ();
 			isTopInning = true;
 			inning++;
 		}
@@ -170,15 +172,21 @@ public class Game : MonoBehaviour
                 ToNextPlayer();
             }
             isHitting = false;
-            Invoke("SwitchToPitcherCamera", 3.0f);
+            Invoke("SwitchCamera", 3.0f);
         }
     }
 
-    private void SwitchToPitcherCamera()
+    private void SwitchCamera()
     {
         isBallCameraMoving = false;
         pitcher.GetComponent<Pitch>().cloneBall.SetActive(false);
-        pitcher.GetComponent<Pitch>().EnableChooseButton();
+		if (nowAttack == "visiting") {
+			pitcher.GetComponent<Pitch> ().EnableReadyBtn ();
+			gameObject.GetComponent<SwitchCamera>().SwitchToHitterCamera();
+		} else {
+			pitcher.GetComponent<Pitch>().EnableChooseButton();
+		}
+        
         SetSituation("Clear");
     }
 }

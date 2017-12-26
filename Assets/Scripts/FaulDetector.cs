@@ -21,6 +21,11 @@ public class FaulDetector : MonoBehaviour {
 		}
 		field.GetComponent<Game>().isBallFlying = false;
 		col.gameObject.SetActive (false);
-		pitcher.GetComponent<Pitch> ().EnableChooseButton ();
+		if (field.GetComponent<Game>().nowAttack == "visiting") {
+			pitcher.GetComponent<Pitch> ().EnableReadyBtn ();
+			field.GetComponent<SwitchCamera>().SwitchToHitterCamera();
+		} else {
+			pitcher.GetComponent<Pitch>().EnableChooseButton();
+		}
 	}
 }
