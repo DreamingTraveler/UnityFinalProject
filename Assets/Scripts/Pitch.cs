@@ -108,14 +108,17 @@ public class Pitch : MonoBehaviour {
 	public void AutoPitch(){
 		float randomNumForBallType = Random.Range (1f, 100f);
 
-		targetPos = new Vector3(Random.Range(195f, 215f), Random.Range(13f,27f), Random.Range(195f,210f));
 		if (randomNumForBallType < 50f) {
+			targetPos = new Vector3(Random.Range(195f, 215f), Random.Range(13f,27f), Random.Range(195f,215f));
 			SetModeAsFourSeam ();
 		} else if (randomNumForBallType >= 50f && randomNumForBallType < 67f) {
+			targetPos = new Vector3(Random.Range(197f, 207f), Random.Range(13f,27f), Random.Range(203f,213f));
 			SetModeAsSlider ();
 		} else if (randomNumForBallType >= 67f && randomNumForBallType < 84f) {
+			targetPos = new Vector3(Random.Range(197f, 207f), Random.Range(13f,27f), Random.Range(203f,213f));
 			SetModeAsCutter ();
 		} else {
+			targetPos = new Vector3(Random.Range(197f, 207f), Random.Range(18f,28f), Random.Range(195f,213f));
 			SetModeAsFork ();
 		}
 		readyToHitBtn.gameObject.SetActive (false);
@@ -290,10 +293,7 @@ public class Pitch : MonoBehaviour {
 		
 	private void MoveHittingPoint(GameObject cloneBall){
         if (!cloneBall) return;
-		if (/*cloneBall.transform.position.x + cloneBall.transform.position.z >= 347f &&
-			cloneBall.transform.position.x + cloneBall.transform.position.z <= 448f*/
-			hitter.GetComponent<HitBall>().CanHit(cloneBall)) {
-			//hitting_point.GetComponent<Rigidbody> ().velocity = hitting_point_end.normalized * 100.0f;
+		if (hitter.GetComponent<HitBall>().CanHit(cloneBall)) {
 			hittingPoint.transform.Translate(Vector3.forward * Time.deltaTime * hittingPointMovingSpeed);
 		}
 	}
