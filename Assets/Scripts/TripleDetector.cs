@@ -30,5 +30,6 @@ public class TripleDetector : MonoBehaviour {
 		field.GetComponent<Game>().isBallCameraMoving = false;
 		pitcher.GetComponent<Pitch> ().cloneBall.SetActive (false);
 		pitcher.GetComponent<Pitch> ().EnableChooseButton ();
+        field.GetComponent<Game> ().SetSituation ("Triple");
 	}
 }

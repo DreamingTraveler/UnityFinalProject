@@ -19,6 +19,7 @@ public class FaulDetector : MonoBehaviour {
 		if (pitcher.GetComponent<Pitch>().strike < 2) {//out ball
 			pitcher.GetComponent<Pitch>().strike++;
 		}
+        field.GetComponent<Game> ().SetSituation ("Faul");
 		field.GetComponent<Game>().isBallFlying = false;
 		col.gameObject.SetActive (false);
 		pitcher.GetComponent<Pitch> ().EnableChooseButton ();
