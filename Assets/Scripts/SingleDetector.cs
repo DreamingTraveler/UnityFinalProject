@@ -23,7 +23,7 @@ public class SingleDetector : MonoBehaviour {
 			field.GetComponent<Game> ().isHitting = true;
 			field.GetComponent<Game> ().ToNextPlayer();
 			field.GetComponent<Game>().isBallFlying = false;
-			Invoke ("SwitchrCamera", 3.0f);
+			Invoke ("SwitchCamera", 3.0f);
 		}
 	}
 

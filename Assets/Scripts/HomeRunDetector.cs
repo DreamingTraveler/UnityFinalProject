@@ -34,6 +34,6 @@ public class HomeRunDetector : MonoBehaviour {
 		} else {
 			pitcher.GetComponent<Pitch>().EnableChooseButton();
 		}
-        field.GetComponent<Game> ().SetSituation("HomeRun");
+        //field.GetComponent<Game> ().SetSituation("HomeRun");
 	}
 }

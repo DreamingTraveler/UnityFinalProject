@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class HitBall : MonoBehaviour {
-	Animator animator;
+	public Animator animator;
 
 	GameObject ball;
 	GameObject hitting_point;
@@ -68,7 +68,6 @@ public class HitBall : MonoBehaviour {
 		MatchForce (ballHorPos.ToString("0.0"));
 		if (CanHit (ball)) {
 			randomY = Random.Range (-200f, 720f);
-			print (randomY);
 			ball.GetComponent<Rigidbody> ().velocity = (new Vector3 (hitting_point.x, randomY, hitting_point.z)).normalized * hitting_force;
 			field.GetComponent<Game> ().SetBall(ball);
             field.GetComponent<SwitchCamera>().SwitchToBallCamera();

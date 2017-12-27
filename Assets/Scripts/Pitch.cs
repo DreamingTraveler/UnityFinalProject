@@ -19,9 +19,11 @@ public class Pitch : MonoBehaviour {
 	public bool canChooseBall = true;
 	public int strike;
 	public int badBall;
-	public int outNum;
+
 	public Camera pitcherCamera;
 	public Camera hitterCamera;
+
+	private float probHit;
 	private Vector3 pitchPos;
 	private Vector3 tempPos;
 
@@ -42,7 +44,6 @@ public class Pitch : MonoBehaviour {
 	private Button readyToHitBtn;
 
 	private Text strikeBall;
-	private Text outNumText;
 	private Text speedText;
     // Use this for initialization
     void Start () {
@@ -65,7 +66,7 @@ public class Pitch : MonoBehaviour {
 		readyToHitBtn = GameObject.Find ("Ready").GetComponent<Button> ();
 
 		strikeBall = GameObject.Find ("StrikeBall").GetComponent<Text> ();
-		outNumText = GameObject.Find ("Out").GetComponent<Text> ();
+
 		speedText = GameObject.Find ("Speed").GetComponent<Text> ();
     }
 		
@@ -96,15 +97,45 @@ public class Pitch : MonoBehaviour {
 			targetMesh.enabled = false;
 			confirmBallPos.gameObject.SetActive (false);
 		}
+
+		if (field.GetComponent<Game> ().nowAttack == "home" && isPitching) {
+			if (hitter.GetComponent<HitBall>().CanHit(cloneBall)) {
+				StartCoroutine (AutoHitTime(cloneBall));
+			}
+		}
 		strikeBall.text = badBall + " - " + strike;
-		outNumText.text = "Out: " + outNum;
+
 	}
-	/*
-	if (ballPos.x >= 198.5f && ballPos.x <= 209.3f && ballPos.y >= 12.5f && ballPos.y <= 25f && 
-		ballPos.z >= 199.5f && ballPos.z <= 210.6f) {
-		strike++;
+
+	IEnumerator AutoHitTime(GameObject cloneBall){
+		float randomNum = Random.Range (0f, 0.15f);
+
+		yield return new WaitForSeconds (randomNum);
+		if (hitter.GetComponent<HitBall> ().isSwing == false) {
+			AutoHit ();
+		}
 	}
-    */
+
+	private void AutoHit(){
+		if(!(targetPos.x >= 198.5f && targetPos.x <= 209.3f && targetPos.y >= 12.5f && targetPos.y <= 25f && 
+			targetPos.z >= 199.5f && targetPos.z <= 210.6f) && probHit > 10f){//ball
+			return;
+		}
+		if (strike == 0 && badBall == 0 && probHit > 70f ||
+		    strike < 2 && badBall >= 2 && probHit < 30f ||
+		    strike == 2 && badBall < 3 && probHit > 10f) {
+			AutoSwing ();
+		} else if (probHit > 50f) {
+			AutoSwing ();
+		}
+
+	}
+
+	private void AutoSwing(){
+		hitter.GetComponent<HitBall>().animator.SetTrigger ("isHit");
+		hitter.GetComponent<HitBall>().Swing(cloneBall);
+	}
+
 	public void AutoPitch(){
 		float randomNumForBallType = Random.Range (1f, 100f);
 
@@ -147,11 +178,6 @@ public class Pitch : MonoBehaviour {
 		}
 	}
 
-    private void SetSituationClear()
-    {
-        field.GetComponent<Game> ().SetSituation ("Clear");
-    }
-
 	private void RecordBallPos(){
 		tempPos = cloneBall.transform.position;
 	}
@@ -190,7 +216,10 @@ public class Pitch : MonoBehaviour {
 		DisableChooseButton ();
 		hitter.GetComponent<HitBall> ().hitting_force = 0;
 		hitter.GetComponent<HitBall> ().isSwing = false;
-        //field.GetComponent<SwitchCamera>().SwitchToHitterCamera();
+        //field.GetComponent<SwitchCamera>().SwitchToHitterCamera()
+
+		probHit = Random.Range (1f, 100f);
+		print ("ProbHit:" + probHit);
         strikeZone.SetActive(false);
 		Invoke ("PitchAnimate", 2.0f);
 	}
@@ -203,7 +232,7 @@ public class Pitch : MonoBehaviour {
         strikeZone.SetActive(true);
 		field.GetComponent<Game>().isHitting = false;
         field.GetComponent<SwitchCamera>().SwitchToPitcherCamera();
-        Invoke("SetSituationClear", 1.0f);
+        //Invoke("SetSituationClear", 1.0f);
     }
 
 	public void DisableChooseButton(){
@@ -233,7 +262,7 @@ public class Pitch : MonoBehaviour {
 				ballPos.z >= 199.5f && ballPos.z <= 210.6f) {
 				strike++;
 			} else {
-                field.GetComponent<Game> ().SetSituation("Ball");
+                //field.GetComponent<Game> ().SetSituation("Ball");
 				badBall++;
 			}
 		}

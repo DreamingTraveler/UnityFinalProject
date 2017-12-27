@@ -9,6 +9,7 @@ public class Game : MonoBehaviour
     public int homeScore;
     public int visitingScore;
     public int inning = 1;
+	public int outNum;
 	public bool isTopInning = true;
 	public string nowAttack = "visiting";
 	public bool isHitting = false;
@@ -23,6 +24,7 @@ public class Game : MonoBehaviour
 	private Text inningText;
 	private Text topInningText;
 	private Text bottomInningText;
+	private Text outNumText;
     private Text situation;
 	// Use this for initialization
 	void Start () {
@@ -33,13 +35,14 @@ public class Game : MonoBehaviour
         situation = GameObject.Find ("Situation").GetComponent<Text> ();
 		topInningText = GameObject.Find ("TopInning").GetComponent<Text> ();
 		bottomInningText = GameObject.Find ("BottomInning").GetComponent<Text> ();
+		outNumText = GameObject.Find ("Out").GetComponent<Text> ();
 		HomeRunWall = GameObject.Find ("HomerunWall");
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		SetText ();
-		if (pitcher.GetComponent<Pitch> ().outNum == 3) {
+		if (outNum == 3) {
 			ToNextHalfInning ();
 		}
 
@@ -48,6 +51,7 @@ public class Game : MonoBehaviour
 		}
 		StrikeoutAndFourBall ();
 		JudgeWinner ();
+		outNumText.text = "Out: " + outNum;
 	}
 
 	private void JudgeWinner(){
@@ -76,20 +80,21 @@ public class Game : MonoBehaviour
 	}
 
 	private void ToNextHalfInning(){
-		pitcher.GetComponent<Pitch> ().outNum = 0;
+		outNum = 0;
 		gameObject.GetComponent<BaseCondition>().SetBase("Empty");
 		if (isTopInning) {//Top -> Bottom
 			nowAttack = "home";
-			gameObject.GetComponent<SwitchCamera> ().SwitchToPitcherCamera ();
+			pitcher.GetComponent<Pitch> ().EnableChooseButton ();
 			isTopInning = false;
 		} else {//Bottom -> Top (Change Inning)
 			nowAttack = "visiting";
+			pitcher.GetComponent<Pitch> ().EnableReadyBtn ();
 			gameObject.GetComponent<SwitchCamera> ().SwitchToHitterCamera ();
 			isTopInning = true;
 			inning++;
 		}
 	}
-
+	/*
     public void SetSituation(string occasion){
         if (occasion == "Clear")
             situation.text = "";
@@ -115,6 +120,7 @@ public class Game : MonoBehaviour
         else if (occasion == "BaseOnBall")
             situation.text = "Base On Ball";
     }
+    */
 
     public void AddPoint(int point)
     {
@@ -134,13 +140,13 @@ public class Game : MonoBehaviour
         int badBall = pitcher.GetComponent<Pitch>().badBall;
         if (strike == 3)
         {//strikeout!
-            SetSituation("Strike Out");
-            pitcher.GetComponent<Pitch>().outNum++;
+            //SetSituation("Strike Out");
+            outNum++;
             ToNextPlayer();
         }
         else if (badBall == 4)
         {
-            SetSituation("BaseOnBall");
+            //SetSituation("BaseOnBall");
             ToNextPlayer();
             gameObject.GetComponent<BaseCondition>().BaseStateMachine(1);
         }
@@ -159,7 +165,7 @@ public class Game : MonoBehaviour
             isBallFlying = false;
             if ((ball.transform.position.x < 200f || ball.transform.position.z < 200f))
             {//faul
-                SetSituation("OutBall");
+                //SetSituation("OutBall");
                 if (pitcher.GetComponent<Pitch>().strike < 2)
                 {
                     pitcher.GetComponent<Pitch>().strike++;
@@ -168,11 +174,11 @@ public class Game : MonoBehaviour
 			else if ((!isHitting && (ball.transform.position.x > 200f && ball.transform.position.z > 200f)) ||
 				GameObject.Find("Hitter").GetComponent<HitBall>().randomY > 600)
             {
-                pitcher.GetComponent<Pitch>().outNum++;
+                outNum++;
                 ToNextPlayer();
             }
             isHitting = false;
-            Invoke("SwitchCamera", 3.0f);
+            Invoke("SwitchCamera", 1.5f);
         }
     }
 
@@ -187,6 +193,6 @@ public class Game : MonoBehaviour
 			pitcher.GetComponent<Pitch>().EnableChooseButton();
 		}
         
-        SetSituation("Clear");
+        //SetSituation("Clear");
     }
 }
