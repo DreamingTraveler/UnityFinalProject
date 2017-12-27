@@ -16,20 +16,27 @@ public class DoubleDetector : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision col){
-		if (field.GetComponent<Game> ().isBallFlying) {
+		if (field.GetComponent<Game> ().isBallFlying &&
+			GameObject.Find("Hitter").GetComponent<HitBall>().randomY <= 600) {
 			gameObject.GetComponent<MeshRenderer> ().material.color = Color.green;
 			field.GetComponent<BaseCondition> ().BaseStateMachine(2);
 			field.GetComponent<Game> ().isHitting = true;
 			field.GetComponent<Game> ().ToNextPlayer();
 			field.GetComponent<Game>().isBallFlying = false;
-			Invoke ("SwitchToPitcherCamera", 3.0f);
+			Invoke ("SwitchCamera", 3.0f);
 		}
 	}
 
-	private void SwitchToPitcherCamera(){
+	private void SwitchCamera(){
 		field.GetComponent<Game>().isBallCameraMoving = false;
 		pitcher.GetComponent<Pitch> ().cloneBall.SetActive (false);
 		pitcher.GetComponent<Pitch> ().EnableChooseButton ();
-        field.GetComponent<Game> ().SetSituation ("Double");
+        //field.GetComponent<Game> ().SetSituation ("Double");
+		if (field.GetComponent<Game>().nowAttack == "visiting") {
+			pitcher.GetComponent<Pitch> ().EnableReadyBtn ();
+			field.GetComponent<SwitchCamera>().SwitchToHitterCamera();
+		} else {
+			pitcher.GetComponent<Pitch>().EnableChooseButton();
+		}
 	}
 }

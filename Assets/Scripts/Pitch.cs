@@ -19,7 +19,11 @@ public class Pitch : MonoBehaviour {
 	public bool canChooseBall = true;
 	public int strike;
 	public int badBall;
-	public int outNum;
+
+	public Camera pitcherCamera;
+	public Camera hitterCamera;
+
+	private float probHit;
 	private Vector3 pitchPos;
 	private Vector3 tempPos;
 
@@ -29,6 +33,7 @@ public class Pitch : MonoBehaviour {
 	private GameObject hittingPoint;
 	private GameObject targetPoint;
 	private GameObject cursor;
+	private GameObject ballPositionImage;
 	private MeshRenderer targetMesh;
 
 	private Button confirmBallPos;
@@ -36,9 +41,9 @@ public class Pitch : MonoBehaviour {
 	private Button sliderBtn;
 	private Button cutterBtn;
 	private Button forkballBtn;
+	private Button readyToHitBtn;
 
 	private Text strikeBall;
-	private Text outNumText;
 	private Text speedText;
     // Use this for initialization
     void Start () {
@@ -51,13 +56,17 @@ public class Pitch : MonoBehaviour {
 		targetPos = targetPoint.transform.position;
 		targetMesh = targetPoint.GetComponent<MeshRenderer> ();
 		cursor = GameObject.FindGameObjectWithTag ("Cursor");
+		ballPositionImage = GameObject.Find ("BallPosition");
+
 		confirmBallPos = GameObject.Find ("Confirm").GetComponent<Button>();
 		fourSeamBtn = GameObject.Find ("FourSeam").GetComponent<Button> ();
 		sliderBtn = GameObject.Find ("Slider").GetComponent<Button> ();
 		cutterBtn = GameObject.Find ("Cutter").GetComponent<Button> ();
 		forkballBtn = GameObject.Find ("Forkball").GetComponent<Button> ();
+		readyToHitBtn = GameObject.Find ("Ready").GetComponent<Button> ();
+
 		strikeBall = GameObject.Find ("StrikeBall").GetComponent<Text> ();
-		outNumText = GameObject.Find ("Out").GetComponent<Text> ();
+
 		speedText = GameObject.Find ("Speed").GetComponent<Text> ();
     }
 		
@@ -73,6 +82,13 @@ public class Pitch : MonoBehaviour {
             }
             StopBall(cloneBall);
 		} 
+
+		if (field.GetComponent<Game> ().nowAttack == "visiting") {
+			strikeZone.SetActive(false);
+			DisableChooseButton ();
+		} else {
+			readyToHitBtn.gameObject.SetActive (false);
+		}
 			
 		if (canChooseBall) {
             ChooseBallPosition ();
@@ -81,8 +97,63 @@ public class Pitch : MonoBehaviour {
 			targetMesh.enabled = false;
 			confirmBallPos.gameObject.SetActive (false);
 		}
+
+		if (field.GetComponent<Game> ().nowAttack == "home" && isPitching) {
+			if (hitter.GetComponent<HitBall>().CanHit(cloneBall)) {
+				StartCoroutine (AutoHitTime(cloneBall));
+			}
+		}
 		strikeBall.text = badBall + " - " + strike;
-		outNumText.text = "Out: " + outNum;
+
+	}
+
+	IEnumerator AutoHitTime(GameObject cloneBall){
+		float randomNum = Random.Range (0f, 0.15f);
+
+		yield return new WaitForSeconds (randomNum);
+		if (hitter.GetComponent<HitBall> ().isSwing == false) {
+			AutoHit ();
+		}
+	}
+
+	private void AutoHit(){
+		if(!(targetPos.x >= 198.5f && targetPos.x <= 209.3f && targetPos.y >= 12.5f && targetPos.y <= 25f && 
+			targetPos.z >= 199.5f && targetPos.z <= 210.6f) && probHit > 10f){//ball
+			return;
+		}
+		if (strike == 0 && badBall == 0 && probHit > 70f ||
+		    strike < 2 && badBall >= 2 && probHit < 30f ||
+		    strike == 2 && badBall < 3 && probHit > 10f) {
+			AutoSwing ();
+		} else if (probHit > 50f) {
+			AutoSwing ();
+		}
+
+	}
+
+	private void AutoSwing(){
+		hitter.GetComponent<HitBall>().animator.SetTrigger ("isHit");
+		hitter.GetComponent<HitBall>().Swing(cloneBall);
+	}
+
+	public void AutoPitch(){
+		float randomNumForBallType = Random.Range (1f, 100f);
+
+		if (randomNumForBallType < 50f) {
+			targetPos = new Vector3(Random.Range(195f, 215f), Random.Range(13f,27f), Random.Range(195f,215f));
+			SetModeAsFourSeam ();
+		} else if (randomNumForBallType >= 50f && randomNumForBallType < 67f) {
+			targetPos = new Vector3(Random.Range(197f, 207f), Random.Range(13f,27f), Random.Range(203f,213f));
+			SetModeAsSlider ();
+		} else if (randomNumForBallType >= 67f && randomNumForBallType < 84f) {
+			targetPos = new Vector3(Random.Range(197f, 207f), Random.Range(13f,27f), Random.Range(203f,213f));
+			SetModeAsCutter ();
+		} else {
+			targetPos = new Vector3(Random.Range(197f, 207f), Random.Range(18f,28f), Random.Range(195f,213f));
+			SetModeAsFork ();
+		}
+		readyToHitBtn.gameObject.SetActive (false);
+		CallAnimate ();
 	}
 
 	public void ChooseBallPosition(){
@@ -107,11 +178,6 @@ public class Pitch : MonoBehaviour {
 		}
 	}
 
-    private void SetSituationClear()
-    {
-        field.GetComponent<Game> ().SetSituation ("Clear");
-    }
-
 	private void RecordBallPos(){
 		tempPos = cloneBall.transform.position;
 	}
@@ -122,21 +188,38 @@ public class Pitch : MonoBehaviour {
 			JudgeBall ();
 			print (tempPos);
 			isPitching = false;
-			EnableChooseButton ();
+			SetCamera ();
+			EnableReadyBtn ();
 			Destroy (cloneBall);
+		}
+	}
+
+	public void EnableReadyBtn(){
+		readyToHitBtn.gameObject.SetActive (true);
+	}
+
+	private void SetCamera(){
+		if(field.GetComponent<Game>().nowAttack == "visiting"){
+			field.GetComponent<SwitchCamera>().SwitchToHitterCamera();
+		}else{
+			EnableChooseButton ();
 		}
 	}
 
 	public void ChooseBallType(){
 		canChooseBall = true;
-		hitter.GetComponent<HitBall> ().hitting_force = 0;
+		targetPos = new Vector3 (202.88f, 20.3f, 205f);
 	}
 
 	public void CallAnimate(){
 		canChooseBall = false;
 		DisableChooseButton ();
+		hitter.GetComponent<HitBall> ().hitting_force = 0;
 		hitter.GetComponent<HitBall> ().isSwing = false;
-        field.GetComponent<SwitchCamera>().SwitchToHitterCamera();
+        //field.GetComponent<SwitchCamera>().SwitchToHitterCamera()
+
+		probHit = Random.Range (1f, 100f);
+		print ("ProbHit:" + probHit);
         strikeZone.SetActive(false);
 		Invoke ("PitchAnimate", 2.0f);
 	}
@@ -149,12 +232,10 @@ public class Pitch : MonoBehaviour {
         strikeZone.SetActive(true);
 		field.GetComponent<Game>().isHitting = false;
         field.GetComponent<SwitchCamera>().SwitchToPitcherCamera();
-        Invoke("SetSituationClear", 1.0f);
-        GameObject go = GameObject.FindGameObjectWithTag("Ball");
-        Destroy(go);
+        //Invoke("SetSituationClear", 1.0f);
     }
 
-	private void DisableChooseButton(){
+	public void DisableChooseButton(){
 		fourSeamBtn.gameObject.SetActive (false);
 		sliderBtn.gameObject.SetActive (false);
 		cutterBtn.gameObject.SetActive (false);
@@ -170,17 +251,28 @@ public class Pitch : MonoBehaviour {
 
 	public void JudgeBall(){
 		Vector3 ballPos = tempPos;
+		if (field.GetComponent<Game> ().nowAttack == "visiting") {
+			ballPositionImage.transform.position = hitterCamera.WorldToScreenPoint(ballPos);
+		} else {
+			ballPositionImage.transform.position = pitcherCamera.WorldToScreenPoint(ballPos);
+		}
+			
 		if (hitter.GetComponent<HitBall> ().isSwing == false) {
 			if (ballPos.x >= 198.5f && ballPos.x <= 209.3f && ballPos.y >= 12.5f && ballPos.y <= 25f && 
 				ballPos.z >= 199.5f && ballPos.z <= 210.6f) {
 				strike++;
 			} else {
-                field.GetComponent<Game> ().SetSituation("Ball");
+                //field.GetComponent<Game> ().SetSituation("Ball");
 				badBall++;
 			}
 		}
+		Invoke ("ChangeImagePosition", 1.5f);
 	}
 
+	private void ChangeImagePosition(){
+		ballPositionImage.transform.position = new Vector3 (-10 ,-10, -10);
+	}
+		
 	public void PitchBall(){
 		Vector3 pitchPos = GameObject.Find ("Pitching_Point").transform.position;																																										
 
@@ -219,7 +311,7 @@ public class Pitch : MonoBehaviour {
 		hittingPointMovingSpeed = 13000f;
 		speed = Random.Range (260f,280f);
 	}
-    //
+    
 	private void CallHitter(GameObject cloneBall){
 		MoveHittingPoint (cloneBall);
 		if (Input.GetKeyDown ("space") && hitter.GetComponent<HitBall>().isSwing == false) {
@@ -230,10 +322,7 @@ public class Pitch : MonoBehaviour {
 		
 	private void MoveHittingPoint(GameObject cloneBall){
         if (!cloneBall) return;
-		if (/*cloneBall.transform.position.x + cloneBall.transform.position.z >= 347f &&
-			cloneBall.transform.position.x + cloneBall.transform.position.z <= 448f*/
-			hitter.GetComponent<HitBall>().CanHit(cloneBall)) {
-			//hitting_point.GetComponent<Rigidbody> ().velocity = hitting_point_end.normalized * 100.0f;
+		if (hitter.GetComponent<HitBall>().CanHit(cloneBall)) {
 			hittingPoint.transform.Translate(Vector3.forward * Time.deltaTime * hittingPointMovingSpeed);
 		}
 	}

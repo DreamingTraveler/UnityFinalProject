@@ -43,7 +43,7 @@ public class BreakBall : MonoBehaviour {
 			break;
 		case 3://Forkball
 			yield return new WaitForSeconds (0.37f);
-			force = 2100f;
+			force = 1600f;
 			breakPoint = new Vector3 (0f, -0.7f, 0f);
 			break;
 		}

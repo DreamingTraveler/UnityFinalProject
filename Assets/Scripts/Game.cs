@@ -2,92 +2,100 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Game : MonoBehaviour
 {
     public int homeScore;
     public int visitingScore;
     public int inning = 1;
-    public bool isTopInning = true;
-    public string nowAttack = "visiting";
-    public bool isHitting = false;
-    public bool isBallFlying = false;
-    public bool isBallCameraMoving = false;
+	public int outNum;
+	public bool isTopInning = true;
+	public string nowAttack = "visiting";
+	public bool isHitting = false;
+	public bool isBallFlying = false;
+	public bool isBallCameraMoving = false;
 
-    private GameObject HomeRunWall;
-    private GameObject pitcher;
-    private GameObject ball;
-    private Text pointText;
-    private Text inningText;
+	private GameObject HomeRunWall;
+	private GameObject pitcher;
+	private GameObject ball;
+    private Text homePointText;
+	private Text visitingPointText;
+	private Text inningText;
+	private Text topInningText;
+	private Text bottomInningText;
+	private Text outNumText;
     private Text situation;
-    // Use this for initialization
-    void Start()
-    {
-        pitcher = GameObject.FindGameObjectWithTag("Pitcher");
-        pointText = GameObject.Find("Point").GetComponent<Text>();
-        inningText = GameObject.Find("Inning").GetComponent<Text>();
-        situation = GameObject.Find("Situation").GetComponent<Text>();
-        HomeRunWall = GameObject.Find("HomerunWall");
-    }
+	// Use this for initialization
+	void Start () {
+		pitcher = GameObject.FindGameObjectWithTag ("Pitcher");
+		homePointText = GameObject.Find("HomePoint").GetComponent<Text>();
+		visitingPointText = GameObject.Find("VisitingPoint").GetComponent<Text>();
+		inningText = GameObject.Find ("Inning").GetComponent<Text> ();
+        situation = GameObject.Find ("Situation").GetComponent<Text> ();
+		topInningText = GameObject.Find ("TopInning").GetComponent<Text> ();
+		bottomInningText = GameObject.Find ("BottomInning").GetComponent<Text> ();
+		outNumText = GameObject.Find ("Out").GetComponent<Text> ();
+		HomeRunWall = GameObject.Find ("HomerunWall");
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		SetText ();
+		if (outNum == 3) {
+			ToNextHalfInning ();
+		}
 
-    // Update is called once per frame
-    void Update()
-    {
-        SetText();
-        if (pitcher.GetComponent<Pitch>().outNum == 3)
-        {
-            ToNextHalfInning();
-        }
+		if (isBallFlying) {
+			JudgeOutBall ();
+		}
+		StrikeoutAndFourBall ();
+		JudgeWinner ();
+		outNumText.text = "Out: " + outNum;
+	}
 
-        if (isBallFlying)
-        {
-            JudgeOutBall();
-        }
+	private void JudgeWinner(){
+		if(inning > 6){
+			SceneManager.LoadScene (1);
+		}
+	}
 
-        StrikeoutAndFourBall();
-    }
+	public void SetBall(GameObject cloneBall){
+		isBallFlying = true;
+		isBallCameraMoving = true;
+		ball = cloneBall;
+	}
 
-    public void SetBall(GameObject cloneBall)
-    {
-        isBallFlying = true;
-        isBallCameraMoving = true;
-        ball = cloneBall;
-    }
+	private void SetText(){
+		homePointText.text = homeScore.ToString();
+		visitingPointText.text = visitingScore.ToString();
+		if (isTopInning) {
+			topInningText.text = "▲";
+			bottomInningText.text = "";
+		} else {
+			topInningText.text = "";
+			bottomInningText.text = "▼";
+		}
+		inningText.text = inning.ToString();
+	}
 
-    private void SetText()
-    {
-        pointText.text = homeScore + " - " + visitingScore;
-        string topBottomSign;
-        if (isTopInning)
-        {
-            topBottomSign = "△";
-        }
-        else
-        {
-            topBottomSign = "▽";
-        }
-        inningText.text = inning + " " + topBottomSign;
-    }
-
-    private void ToNextHalfInning()
-    {
-        pitcher.GetComponent<Pitch>().outNum = 0;
-        gameObject.GetComponent<BaseCondition>().SetBase("Empty");
-        if (isTopInning)
-        {//Top -> Bottom
-            nowAttack = "home";
-            isTopInning = false;
-        }
-        else
-        {//Bottom -> Top (Change Inning)
-            nowAttack = "visiting";
-            isTopInning = true;
-            inning++;
-        }
-    }
-
-    public void SetSituation(string occasion)
-    {
+	private void ToNextHalfInning(){
+		outNum = 0;
+		gameObject.GetComponent<BaseCondition>().SetBase("Empty");
+		if (isTopInning) {//Top -> Bottom
+			nowAttack = "home";
+			pitcher.GetComponent<Pitch> ().EnableChooseButton ();
+			isTopInning = false;
+		} else {//Bottom -> Top (Change Inning)
+			nowAttack = "visiting";
+			pitcher.GetComponent<Pitch> ().EnableReadyBtn ();
+			gameObject.GetComponent<SwitchCamera> ().SwitchToHitterCamera ();
+			isTopInning = true;
+			inning++;
+		}
+	}
+	/*
+    public void SetSituation(string occasion){
         if (occasion == "Clear")
             situation.text = "";
 
@@ -112,6 +120,7 @@ public class Game : MonoBehaviour
         else if (occasion == "BaseOnBall")
             situation.text = "Base On Ball";
     }
+    */
 
     public void AddPoint(int point)
     {
@@ -131,13 +140,13 @@ public class Game : MonoBehaviour
         int badBall = pitcher.GetComponent<Pitch>().badBall;
         if (strike == 3)
         {//strikeout!
-            SetSituation("Strike Out");
-            pitcher.GetComponent<Pitch>().outNum++;
+            //SetSituation("Strike Out");
+            outNum++;
             ToNextPlayer();
         }
         else if (badBall == 4)
         {
-            SetSituation("BaseOnBall");
+            //SetSituation("BaseOnBall");
             ToNextPlayer();
             gameObject.GetComponent<BaseCondition>().BaseStateMachine(1);
         }
@@ -156,27 +165,34 @@ public class Game : MonoBehaviour
             isBallFlying = false;
             if ((ball.transform.position.x < 200f || ball.transform.position.z < 200f))
             {//faul
-                SetSituation("OutBall");
+                //SetSituation("OutBall");
                 if (pitcher.GetComponent<Pitch>().strike < 2)
                 {
                     pitcher.GetComponent<Pitch>().strike++;
                 }
             }
-            else if (!isHitting && (ball.transform.position.x > 200f && ball.transform.position.z > 200f))
+			else if ((!isHitting && (ball.transform.position.x > 200f && ball.transform.position.z > 200f)) ||
+				GameObject.Find("Hitter").GetComponent<HitBall>().randomY > 600)
             {
-                pitcher.GetComponent<Pitch>().outNum++;
+                outNum++;
                 ToNextPlayer();
             }
             isHitting = false;
-            Invoke("SwitchToPitcherCamera", 3.0f);
+            Invoke("SwitchCamera", 1.5f);
         }
     }
 
-    private void SwitchToPitcherCamera()
+    private void SwitchCamera()
     {
         isBallCameraMoving = false;
         pitcher.GetComponent<Pitch>().cloneBall.SetActive(false);
         pitcher.GetComponent<Pitch>().EnableChooseButton();
-        SetSituation("Clear");
+        //SetSituation("Clear");
+		if (nowAttack == "visiting") {
+			pitcher.GetComponent<Pitch> ().EnableReadyBtn ();
+			gameObject.GetComponent<SwitchCamera>().SwitchToHitterCamera();
+		} else {
+			pitcher.GetComponent<Pitch>().EnableChooseButton();
+		}
     }
 }

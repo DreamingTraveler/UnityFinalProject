@@ -6,6 +6,8 @@ public class SwitchCamera : MonoBehaviour {
     public Camera pitcherCamera;
     public Camera hitterCamera;
     public Camera ballCamera;
+	public string nowCamera;
+	public GameObject scoreCanvas;
 
     private AudioListener pitcherAL;
     private AudioListener hitterAL;
@@ -16,7 +18,11 @@ public class SwitchCamera : MonoBehaviour {
         hitterAL = hitterCamera.GetComponent<AudioListener>();
         ballAL = ballCamera.GetComponent<AudioListener>();
 
-        SwitchToPitcherCamera();
+		if (gameObject.GetComponent<Game> ().nowAttack == "visiting") {
+			SwitchToHitterCamera ();
+		} else {
+			SwitchToPitcherCamera ();
+		}
     }
 	
 	// Update is called once per frame
@@ -25,29 +31,38 @@ public class SwitchCamera : MonoBehaviour {
 	}
 
     public void SwitchToPitcherCamera(){
+		nowCamera = "Pitcher";
         pitcherCamera.gameObject.SetActive(true);
         pitcherAL.enabled = true;
         hitterCamera.gameObject.SetActive(false);
         hitterAL.enabled = false;
         ballCamera.gameObject.SetActive(false);
         ballAL.enabled = false;
+
+		scoreCanvas.SetActive (true);
     }
 
     public void SwitchToHitterCamera(){
+		nowCamera = "Hitter";
         pitcherCamera.gameObject.SetActive(false);
         pitcherAL.enabled = false;
         hitterCamera.gameObject.SetActive(true);
         hitterAL.enabled = true;
         ballCamera.gameObject.SetActive(false);
         ballAL.enabled = false;
+
+		scoreCanvas.SetActive (true);
     }
 
     public void SwitchToBallCamera() {
+		nowCamera = "Ball";
         pitcherCamera.gameObject.SetActive(false);
         pitcherAL.enabled = false;
         hitterCamera.gameObject.SetActive(false);
         hitterAL.enabled = false;
         ballCamera.gameObject.SetActive(true);
         ballAL.enabled = true;
+
+		scoreCanvas.SetActive (false);
     }
 }
