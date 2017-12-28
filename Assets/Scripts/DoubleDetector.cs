@@ -23,6 +23,7 @@ public class DoubleDetector : MonoBehaviour {
 			field.GetComponent<Game> ().isHitting = true;
 			field.GetComponent<Game> ().ToNextPlayer();
 			field.GetComponent<Game>().isBallFlying = false;
+			field.GetComponent<Game>().AddHitNum();
 			Invoke ("SwitchCamera", 3.0f);
 		}
 	}
@@ -30,7 +31,7 @@ public class DoubleDetector : MonoBehaviour {
 	private void SwitchCamera(){
 		field.GetComponent<Game>().isBallCameraMoving = false;
 		pitcher.GetComponent<Pitch> ().cloneBall.SetActive (false);
-		if (field.GetComponent<Game>().nowAttack == "visiting") {
+		if (field.GetComponent<Game>().nowAttack == "visitor") {
 			pitcher.GetComponent<Pitch> ().EnableReadyBtn ();
 			field.GetComponent<SwitchCamera>().SwitchToHitterCamera();
 		} else {

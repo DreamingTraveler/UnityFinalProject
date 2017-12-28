@@ -18,7 +18,7 @@ public class SwitchCamera : MonoBehaviour {
         hitterAL = hitterCamera.GetComponent<AudioListener>();
         ballAL = ballCamera.GetComponent<AudioListener>();
 
-		if (gameObject.GetComponent<Game> ().nowAttack == "visiting") {
+		if (gameObject.GetComponent<Game> ().nowAttack == "visitor") {
 			SwitchToHitterCamera ();
 		} else {
 			SwitchToPitcherCamera ();

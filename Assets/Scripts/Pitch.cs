@@ -83,7 +83,7 @@ public class Pitch : MonoBehaviour {
             StopBall(cloneBall);
 		} 
 
-		if (field.GetComponent<Game> ().nowAttack == "visiting") {
+		if (field.GetComponent<Game> ().nowAttack == "visitor") {
 			strikeZone.SetActive(false);
 			DisableChooseButton ();
 		} else {
@@ -199,7 +199,7 @@ public class Pitch : MonoBehaviour {
 	}
 
 	private void SetCamera(){
-		if(field.GetComponent<Game>().nowAttack == "visiting"){
+		if(field.GetComponent<Game>().nowAttack == "visitor"){
 			field.GetComponent<SwitchCamera>().SwitchToHitterCamera();
 		}else{
 			EnableChooseButton ();
@@ -251,7 +251,7 @@ public class Pitch : MonoBehaviour {
 
 	public void JudgeBall(){
 		Vector3 ballPos = tempPos;
-		if (field.GetComponent<Game> ().nowAttack == "visiting") {
+		if (field.GetComponent<Game> ().nowAttack == "visitor") {
 			ballPositionImage.transform.position = hitterCamera.WorldToScreenPoint(ballPos);
 		} else {
 			ballPositionImage.transform.position = pitcherCamera.WorldToScreenPoint(ballPos);
