@@ -31,6 +31,7 @@ public class DoubleDetector : MonoBehaviour {
 	private void SwitchCamera(){
 		field.GetComponent<Game>().isBallCameraMoving = false;
 		pitcher.GetComponent<Pitch> ().cloneBall.SetActive (false);
+		field.GetComponent<Game>().isHitting = false;
 		if (field.GetComponent<Game>().nowAttack == "visitor") {
 			pitcher.GetComponent<Pitch> ().EnableReadyBtn ();
 			field.GetComponent<SwitchCamera>().SwitchToHitterCamera();

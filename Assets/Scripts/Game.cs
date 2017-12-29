@@ -12,11 +12,13 @@ public class Game : MonoBehaviour
 	public int outNum;
 	public int homeHitNum = 0;//
 	public int visitorHitNum = 0;//
+	public int currentInningScore = 0;
 	public bool isTopInning = true;//
 	public string nowAttack = "visitor";//
 	public bool isHitting = false;
 	public bool isBallFlying = false;
 	public bool isBallCameraMoving = false;
+	public GameObject changeInningScene;
 
 	private GameObject HomeRunWall;
 	private GameObject pitcher;
@@ -83,36 +85,29 @@ public class Game : MonoBehaviour
 
 	private void ToNextHalfInning(){
 		outNum = 0;
+		gameObject.GetComponent<ShowScore> ().Show ();
+
 		gameObject.GetComponent<BaseCondition>().SetBase("Empty");
+		changeInningScene.SetActive (true);
+	}
+
+	public void HideScene(){
+		currentInningScore = 0;
+		changeInningScene.SetActive (false);
 		if (isTopInning) {//Top -> Bottom
 			nowAttack = "home";
-			pitcher.GetComponent<Pitch> ().EnableChooseButton ();
 			isTopInning = false;
+			pitcher.GetComponent<Pitch> ().EnableChooseButton ();
 		} else {//Bottom -> Top (Change Inning)
 			nowAttack = "visitor";
 			pitcher.GetComponent<Pitch> ().EnableReadyBtn ();
-			gameObject.GetComponent<SwitchCamera> ().SwitchToHitterCamera ();
 			isTopInning = true;
+			gameObject.GetComponent<SwitchCamera> ().SwitchToHitterCamera ();
 			inning++;
 		}
-		SaveData ();
-		SceneManager.LoadScene (2);
 	}
 
-	private void SaveData(){
-		PlayerPrefs.SetInt ("HomeScore", homeScore);
-		PlayerPrefs.SetInt ("VisitorScore", visitorScore);
-		PlayerPrefs.SetInt ("Inning", inning);
-		PlayerPrefs.SetInt ("HomeHit", homeHitNum);
-		PlayerPrefs.SetInt ("VisitorHit", visitorHitNum);
 
-		if (isTopInning) {
-			PlayerPrefs.SetInt ("IsTopInning", 1);
-		} else {
-			PlayerPrefs.SetInt ("IsTopInning", 0);
-		}
-		PlayerPrefs.SetString ("NowAttack", nowAttack);
-	}
 	/*
     public void SetSituation(string occasion){
         if (occasion == "Clear")
@@ -157,6 +152,7 @@ public class Game : MonoBehaviour
         else if (nowAttack == "visitor"){
             visitorScore += point;
         }
+		currentInningScore += point;
     }
 
     public void StrikeoutAndFourBall()

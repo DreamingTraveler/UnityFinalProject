@@ -121,14 +121,12 @@ public class Pitch : MonoBehaviour {
 			targetPos.z >= 199.5f && targetPos.z <= 210.6f) && probHit > 10f){//ball
 			return;
 		}
-		if (strike == 0 && badBall == 0 && probHit > 70f ||
-		    strike < 2 && badBall >= 2 && probHit < 30f ||
-		    strike == 2 && badBall < 3 && probHit > 10f) {
-			AutoSwing ();
-		} else if (probHit > 50f) {
+		if ((strike == 0 && badBall == 0) && (probHit > 70f) ||
+			(strike < 2 && badBall < 2) && (probHit > 50f) ||
+			(strike < badBall && probHit < 30f) ||
+			(strike == 2 && badBall < 3) && (probHit > 10f)) {
 			AutoSwing ();
 		}
-
 	}
 
 	private void AutoSwing(){
