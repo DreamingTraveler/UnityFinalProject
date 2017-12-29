@@ -5024,7 +5024,7 @@ MonoBehaviour:
   homeScore: 0
   visitorScore: 0
   inning: 1
-  outNum: 2
+  outNum: 0
   homeHitNum: 0
   visitorHitNum: 0
   currentInningScore: 0
