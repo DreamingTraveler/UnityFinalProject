@@ -213,7 +213,5 @@ public class Game : MonoBehaviour
 		} else {
 			pitcher.GetComponent<Pitch>().EnableChooseButton();
 		}
-        
-        //SetSituation("Clear");
     }
 }
