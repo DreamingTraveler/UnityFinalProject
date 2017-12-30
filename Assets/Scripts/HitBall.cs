@@ -27,7 +27,7 @@ public class HitBall : MonoBehaviour {
 	}
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetKeyDown("space")){
+		if(Input.GetKeyDown("space") && field.GetComponent<Game>().nowAttack == "visitor"){
 			animator.SetTrigger ("isHit");
 		}
 	}
