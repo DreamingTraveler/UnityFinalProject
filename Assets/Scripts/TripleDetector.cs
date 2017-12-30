@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class TripleDetector : MonoBehaviour {
 	public GameObject field;
 	public GameObject pitcher;
-    private Image judgeTriple;
+    private GameObject judgeTriple;
 	// Use this for initialization
 	void Start () {
 
@@ -25,6 +25,7 @@ public class TripleDetector : MonoBehaviour {
 			field.GetComponent<Game> ().isHitting = true;
 			field.GetComponent<Game> ().ToNextPlayer();
 			field.GetComponent<Game>().isBallFlying = false;
+			field.GetComponent<Game>().AddHitNum();
 			Invoke ("SwitchCamera", 3.0f);
 		}
 	}
@@ -32,10 +33,10 @@ public class TripleDetector : MonoBehaviour {
 	private void SwitchCamera(){
 		field.GetComponent<Game>().isBallCameraMoving = false;
 		pitcher.GetComponent<Pitch> ().cloneBall.SetActive (false);
-		pitcher.GetComponent<Pitch> ().EnableChooseButton ();
         judgeTriple.GetComponent<Pitch>().judgeTriple.enabled = true;
         //field.GetComponent<Game> ().SetSituation ("Triple");
-		if (field.GetComponent<Game>().nowAttack == "visiting") {
+		field.GetComponent<Game>().isHitting = false;
+		if (field.GetComponent<Game>().nowAttack == "visitor") {
 			pitcher.GetComponent<Pitch> ().EnableReadyBtn ();
 			field.GetComponent<SwitchCamera>().SwitchToHitterCamera();
 		} else {

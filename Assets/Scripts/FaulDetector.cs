@@ -25,7 +25,7 @@ public class FaulDetector : MonoBehaviour {
         //field.GetComponent<Game> ().SetSituation ("Faul");
 		field.GetComponent<Game>().isBallFlying = false;
 		col.gameObject.SetActive (false);
-		if (field.GetComponent<Game>().nowAttack == "visiting") {
+		if (field.GetComponent<Game>().nowAttack == "visitor") {
 			pitcher.GetComponent<Pitch> ().EnableReadyBtn ();
 			field.GetComponent<SwitchCamera>().SwitchToHitterCamera();
 		} else {

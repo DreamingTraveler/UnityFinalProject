@@ -25,6 +25,7 @@ public class SingleDetector : MonoBehaviour {
 			field.GetComponent<Game> ().isHitting = true;
 			field.GetComponent<Game> ().ToNextPlayer();
 			field.GetComponent<Game>().isBallFlying = false;
+			field.GetComponent<Game>().AddHitNum();
 			Invoke ("SwitchCamera", 3.0f);
 		}
 	}
@@ -32,10 +33,10 @@ public class SingleDetector : MonoBehaviour {
 	private void SwitchCamera(){
 		field.GetComponent<Game>().isBallCameraMoving = false;
 		pitcher.GetComponent<Pitch> ().cloneBall.SetActive (false);
-		pitcher.GetComponent<Pitch> ().EnableChooseButton ();
         judgeSingle.GetComponent<Pitch>().judgeSingle.enabled = true;
         //field.GetComponent<Game> ().SetSituation ("Single");
-		if (field.GetComponent<Game>().nowAttack == "visiting") {
+		field.GetComponent<Game>().isHitting = false;
+		if (field.GetComponent<Game>().nowAttack == "visitor") {
 			pitcher.GetComponent<Pitch> ().EnableReadyBtn ();
 			field.GetComponent<SwitchCamera>().SwitchToHitterCamera();
 		} else {

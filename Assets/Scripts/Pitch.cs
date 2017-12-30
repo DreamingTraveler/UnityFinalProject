@@ -102,7 +102,7 @@ public class Pitch : MonoBehaviour {
             StopBall(cloneBall);
 		} 
 
-		if (field.GetComponent<Game> ().nowAttack == "visiting") {
+		if (field.GetComponent<Game> ().nowAttack == "visitor") {
 			strikeZone.SetActive(false);
 			DisableChooseButton ();
 		} else {
@@ -140,11 +140,10 @@ public class Pitch : MonoBehaviour {
 			targetPos.z >= 199.5f && targetPos.z <= 210.6f) && probHit > 10f){//ball
 			return;
 		}
-		if (strike == 0 && badBall == 0 && probHit > 70f ||
-		    strike < 2 && badBall >= 2 && probHit < 30f ||
-		    strike == 2 && badBall < 3 && probHit > 10f) {
-			AutoSwing ();
-		} else if (probHit > 50f) {
+		if ((strike == 0 && badBall == 0) && (probHit > 70f) ||
+			(strike < 2 && badBall < 2) && (probHit > 50f) ||
+			(strike < badBall && probHit < 30f) ||
+			(strike == 2 && badBall < 3) && (probHit > 10f)) {
 			AutoSwing ();
 		}
 	}
@@ -232,7 +231,7 @@ public class Pitch : MonoBehaviour {
 	}
 
 	private void SetCamera(){
-		if(field.GetComponent<Game>().nowAttack == "visiting"){
+		if(field.GetComponent<Game>().nowAttack == "visitor"){
 			field.GetComponent<SwitchCamera>().SwitchToHitterCamera();
 		}else{
 			EnableChooseButton ();
@@ -284,7 +283,7 @@ public class Pitch : MonoBehaviour {
 
 	public void JudgeBall(){
 		Vector3 ballPos = tempPos;
-		if (field.GetComponent<Game> ().nowAttack == "visiting") {
+		if (field.GetComponent<Game> ().nowAttack == "visitor") {
 			ballPositionImage.transform.position = hitterCamera.WorldToScreenPoint(ballPos);
 		} else {
 			ballPositionImage.transform.position = pitcherCamera.WorldToScreenPoint(ballPos);

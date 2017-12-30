@@ -6,15 +6,19 @@ using UnityEngine.SceneManagement;
 
 public class Game : MonoBehaviour
 {
-    public int homeScore;
-    public int visitingScore;
-    public int inning = 1;
+    public int homeScore;//
+    public int visitorScore;//
+    public int inning = 1;//
 	public int outNum;
-	public bool isTopInning = true;
-	public string nowAttack = "visiting";
+	public int homeHitNum = 0;//
+	public int visitorHitNum = 0;//
+	public int currentInningScore = 0;
+	public bool isTopInning = true;//
+	public string nowAttack = "visitor";//
 	public bool isHitting = false;
 	public bool isBallFlying = false;
 	public bool isBallCameraMoving = false;
+	public GameObject changeInningScene;
 
 	private GameObject HomeRunWall;
 	private GameObject pitcher;
@@ -24,7 +28,7 @@ public class Game : MonoBehaviour
     private Image judgeFaulBall;
     private Image judgeStrike;
     private Text homePointText;
-	private Text visitingPointText;
+	private Text visitorPointText;
 	private Text inningText;
 	private Text topInningText;
 	private Text bottomInningText;
@@ -34,7 +38,7 @@ public class Game : MonoBehaviour
 	void Start () {
 		pitcher = GameObject.FindGameObjectWithTag ("Pitcher");
 		homePointText = GameObject.Find("HomePoint").GetComponent<Text>();
-		visitingPointText = GameObject.Find("VisitingPoint").GetComponent<Text>();
+		visitorPointText = GameObject.Find("VisitingPoint").GetComponent<Text>();
 		inningText = GameObject.Find ("Inning").GetComponent<Text> ();
         situation = GameObject.Find ("Situation").GetComponent<Text> ();
 		topInningText = GameObject.Find ("TopInning").GetComponent<Text> ();
@@ -76,7 +80,7 @@ public class Game : MonoBehaviour
 
 	private void SetText(){
 		homePointText.text = homeScore.ToString();
-		visitingPointText.text = visitingScore.ToString();
+		visitorPointText.text = visitorScore.ToString();
 		if (isTopInning) {
 			topInningText.text = "▲";
 			bottomInningText.text = "";
@@ -89,19 +93,29 @@ public class Game : MonoBehaviour
 
 	private void ToNextHalfInning(){
 		outNum = 0;
+		gameObject.GetComponent<ShowScore> ().Show ();
+
 		gameObject.GetComponent<BaseCondition>().SetBase("Empty");
+		changeInningScene.SetActive (true);
+	}
+
+	public void HideScene(){
+		currentInningScore = 0;
+		changeInningScene.SetActive (false);
 		if (isTopInning) {//Top -> Bottom
 			nowAttack = "home";
-			pitcher.GetComponent<Pitch> ().EnableChooseButton ();
 			isTopInning = false;
+			pitcher.GetComponent<Pitch> ().EnableChooseButton ();
 		} else {//Bottom -> Top (Change Inning)
-			nowAttack = "visiting";
+			nowAttack = "visitor";
 			pitcher.GetComponent<Pitch> ().EnableReadyBtn ();
-			gameObject.GetComponent<SwitchCamera> ().SwitchToHitterCamera ();
 			isTopInning = true;
+			gameObject.GetComponent<SwitchCamera> ().SwitchToHitterCamera ();
 			inning++;
 		}
 	}
+
+
 	/*
     public void SetSituation(string occasion){
         if (occasion == "Clear")
@@ -130,16 +144,23 @@ public class Game : MonoBehaviour
     }
     */
 
+	public void AddHitNum(){
+		if (nowAttack == "home") {
+			homeHitNum++;
+		} else {
+			visitorHitNum++;
+		}
+	}
+
     public void AddPoint(int point)
     {
-        if (nowAttack == "home")
-        {
+        if (nowAttack == "home"){
             homeScore += point;
         }
-        else if (nowAttack == "visiting")
-        {
-            visitingScore += point;
+        else if (nowAttack == "visitor"){
+            visitorScore += point;
         }
+		currentInningScore += point;
     }
 
     public void StrikeoutAndFourBall()
@@ -198,9 +219,7 @@ public class Game : MonoBehaviour
     {
         isBallCameraMoving = false;
         pitcher.GetComponent<Pitch>().cloneBall.SetActive(false);
-        pitcher.GetComponent<Pitch>().EnableChooseButton();
-        //SetSituation("Clear");
-		if (nowAttack == "visiting") {
+		if (nowAttack == "visitor") {
 			pitcher.GetComponent<Pitch> ().EnableReadyBtn ();
 			gameObject.GetComponent<SwitchCamera>().SwitchToHitterCamera();
 		} else {
