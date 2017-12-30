@@ -36,6 +36,7 @@ public class Game : MonoBehaviour
 	private GameObject HomeRunWall;
 	private GameObject pitcher;
 	private GameObject ball;
+<<<<<<< HEAD
 
 	public Button nextInningBtn;
 	public Button playAgainBtn;
@@ -49,13 +50,33 @@ public class Game : MonoBehaviour
 	public Text bottomInningText;
 	public Text outNumText;
 	public Text resultText;
+=======
+    private Image judgeStrikeOut;
+    private Image judgeBaseOnBall;
+    private Image judgeFaulBall;
+    private Image judgeStrike;
+    private Text homePointText;
+	private Text visitorPointText;
+	private Text inningText;
+	private Text topInningText;
+	private Text bottomInningText;
+	private Text outNumText;
+    private Text situation;
+>>>>>>> 78773bb529d817df62523c49b95a589b006e4ccd
 	// Use this for initialization
 	void Start () {
 		pitcher = GameObject.FindGameObjectWithTag ("Pitcher");
 		HomeRunWall = GameObject.Find ("HomerunWall");
+<<<<<<< HEAD
 		visitorName1.text = PlayerPrefs.GetString ("TeamName");
 		visitorName2.text = PlayerPrefs.GetString ("TeamName");
 		HideImage ();
+=======
+        judgeBaseOnBall = GameObject.Find("BaseOnBall").GetComponent<Image> ();
+        judgeStrikeOut = GameObject.Find("StrikeOut").GetComponent<Image>();
+        judgeStrike = GameObject.Find("Strike").GetComponent<Image>();
+        judgeFaulBall = GameObject.Find("FoulBall").GetComponent<Image>();
+>>>>>>> 78773bb529d817df62523c49b95a589b006e4ccd
 	}
 	
 	// Update is called once per frame
@@ -199,6 +220,7 @@ public class Game : MonoBehaviour
     public void StrikeoutAndFourBall(){
         int strike = pitcher.GetComponent<Pitch>().strike;
         int badBall = pitcher.GetComponent<Pitch>().badBall;
+<<<<<<< HEAD
         if (strike == 3){//strikeout!
 			ShowImage ("StrikeOut");
             outNum++;
@@ -206,6 +228,20 @@ public class Game : MonoBehaviour
         }
         else if (badBall == 4){
 			ShowImage ("BB");
+=======
+        if (strike == 3)
+        {//strikeout!
+            judgeStrike.enabled = false;
+            judgeStrikeOut.enabled = true;
+            //SetSituation("Strike Out");
+            outNum++;
+            ToNextPlayer();
+        }
+        else if (badBall == 4)
+        {
+            judgeBaseOnBall.enabled = true;
+            //SetSituation("BaseOnBall");
+>>>>>>> 78773bb529d817df62523c49b95a589b006e4ccd
             ToNextPlayer();
             gameObject.GetComponent<BaseCondition>().BaseStateMachine(1);
         }
@@ -222,9 +258,18 @@ public class Game : MonoBehaviour
         if (ball.transform.position.y <= 1.0f)
         {//The ball falls to the field
             isBallFlying = false;
+<<<<<<< HEAD
             if ((ball.transform.position.x < 200f || ball.transform.position.z < 200f)){//faul
 				ShowImage ("Foul");
                 if (pitcher.GetComponent<Pitch>().strike < 2){
+=======
+            if ((ball.transform.position.x < 200f || ball.transform.position.z < 200f))
+            {//faul
+                judgeFaulBall.enabled = true;
+                //SetSituation("OutBall");
+                if (pitcher.GetComponent<Pitch>().strike < 2)
+                {
+>>>>>>> 78773bb529d817df62523c49b95a589b006e4ccd
                     pitcher.GetComponent<Pitch>().strike++;
                 }
             }
