@@ -19,6 +19,10 @@ public class Game : MonoBehaviour
 	private GameObject HomeRunWall;
 	private GameObject pitcher;
 	private GameObject ball;
+    private Image judgeStrikeOut;
+    private Image judgeBaseOnBall;
+    private Image judgeFaulBall;
+    private Image judgeStrike;
     private Text homePointText;
 	private Text visitingPointText;
 	private Text inningText;
@@ -37,6 +41,10 @@ public class Game : MonoBehaviour
 		bottomInningText = GameObject.Find ("BottomInning").GetComponent<Text> ();
 		outNumText = GameObject.Find ("Out").GetComponent<Text> ();
 		HomeRunWall = GameObject.Find ("HomerunWall");
+        judgeBaseOnBall = GameObject.Find("BaseOnBall").GetComponent<Image> ();
+        judgeStrikeOut = GameObject.Find("StrikeOut").GetComponent<Image>();
+        judgeStrike = GameObject.Find("Strike").GetComponent<Image>();
+        judgeFaulBall = GameObject.Find("FoulBall").GetComponent<Image>();
 	}
 	
 	// Update is called once per frame
@@ -140,12 +148,15 @@ public class Game : MonoBehaviour
         int badBall = pitcher.GetComponent<Pitch>().badBall;
         if (strike == 3)
         {//strikeout!
+            judgeStrike.enabled = false;
+            judgeStrikeOut.enabled = true;
             //SetSituation("Strike Out");
             outNum++;
             ToNextPlayer();
         }
         else if (badBall == 4)
         {
+            judgeBaseOnBall.enabled = true;
             //SetSituation("BaseOnBall");
             ToNextPlayer();
             gameObject.GetComponent<BaseCondition>().BaseStateMachine(1);
@@ -165,6 +176,7 @@ public class Game : MonoBehaviour
             isBallFlying = false;
             if ((ball.transform.position.x < 200f || ball.transform.position.z < 200f))
             {//faul
+                judgeFaulBall.enabled = true;
                 //SetSituation("OutBall");
                 if (pitcher.GetComponent<Pitch>().strike < 2)
                 {

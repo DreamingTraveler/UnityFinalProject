@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Pitch : MonoBehaviour {
 	Animator pitcherAnimator;
 	Animator ballAnimator;
-	public GameObject ball;
+    public GameObject ball;
     public GameObject strikeZone;
 	public GameObject cloneBall;
 	public float speed;
@@ -23,18 +23,29 @@ public class Pitch : MonoBehaviour {
 	public Camera pitcherCamera;
 	public Camera hitterCamera;
 
+    private Image image;
 	private float probHit;
 	private Vector3 pitchPos;
 	private Vector3 tempPos;
 
     private GameObject field;
-
 	private GameObject hitter;
 	private GameObject hittingPoint;
 	private GameObject targetPoint;
 	private GameObject cursor;
 	private GameObject ballPositionImage;
-	private MeshRenderer targetMesh;
+    public Image judgeBall;
+    public Image judgeStrike;
+    public Image judgeBaseOnBall;
+    public Image judgeSingle;
+    public Image judgeDouble;
+    public Image judgeTriple;
+    public Image judgeFoulBall;
+    public Image judgeHomeRun;
+    public Image judgeStrikeOut;
+
+    private RectTransform ballSituation;
+    private MeshRenderer targetMesh;
 
 	private Button confirmBallPos;
 	private Button fourSeamBtn;
@@ -49,6 +60,16 @@ public class Pitch : MonoBehaviour {
     void Start () {
 		pitcherAnimator = GameObject.FindGameObjectWithTag("Pitcher").GetComponent<Animator> ();
 		pitcherAnimator.Play("Pitcher_Idle");
+        ballSituation = GameObject.Find("BallSituation").GetComponent<RectTransform> ();
+        judgeBall = GameObject.Find("Ball").GetComponent<Image>();
+        judgeStrike = GameObject.Find("Strike").GetComponent<Image>();
+        judgeBaseOnBall = GameObject.Find("BaseOnBall").GetComponent<Image>();
+        judgeSingle = GameObject.Find("Single").GetComponent<Image>();
+        judgeDouble = GameObject.Find("Double").GetComponent<Image>();
+        judgeTriple = GameObject.Find("Triple").GetComponent<Image>();
+        judgeHomeRun = GameObject.Find("HomeRun").GetComponent<Image>();
+        judgeFoulBall = GameObject.Find("FoulBall").GetComponent<Image>();
+        judgeStrikeOut = GameObject.Find("StrikeOut").GetComponent<Image>();
         field = GameObject.Find("Field");
         hitter = GameObject.FindGameObjectWithTag ("Hitter");
 		hittingPoint = GameObject.Find ("Hitting_Point");
@@ -64,9 +85,7 @@ public class Pitch : MonoBehaviour {
 		cutterBtn = GameObject.Find ("Cutter").GetComponent<Button> ();
 		forkballBtn = GameObject.Find ("Forkball").GetComponent<Button> ();
 		readyToHitBtn = GameObject.Find ("Ready").GetComponent<Button> ();
-
 		strikeBall = GameObject.Find ("StrikeBall").GetComponent<Text> ();
-
 		speedText = GameObject.Find ("Speed").GetComponent<Text> ();
     }
 		
@@ -128,15 +147,29 @@ public class Pitch : MonoBehaviour {
 		} else if (probHit > 50f) {
 			AutoSwing ();
 		}
-
 	}
 
+    public void SetBallSituationInitial()
+    {
+        judgeBall.enabled = false;
+        judgeBaseOnBall.enabled = false;
+        judgeDouble.enabled = false;
+        judgeFoulBall.enabled = false;
+        judgeHomeRun.enabled = false;
+        judgeSingle.enabled = false;
+        judgeStrike.enabled = false;
+        judgeTriple.enabled = false;
+        judgeStrikeOut.enabled = false;
+    }
+
 	private void AutoSwing(){
-		hitter.GetComponent<HitBall>().animator.SetTrigger ("isHit");
+        ballSituation.transform.localPosition = new Vector3(150, 271, 0);
+        hitter.GetComponent<HitBall>().animator.SetTrigger ("isHit");
 		hitter.GetComponent<HitBall>().Swing(cloneBall);
 	}
 
 	public void AutoPitch(){
+        ballSituation.transform.localPosition = new Vector3(38, 195, 0);
 		float randomNumForBallType = Random.Range (1f, 100f);
 
 		if (randomNumForBallType < 50f) {
@@ -260,8 +293,10 @@ public class Pitch : MonoBehaviour {
 		if (hitter.GetComponent<HitBall> ().isSwing == false) {
 			if (ballPos.x >= 198.5f && ballPos.x <= 209.3f && ballPos.y >= 12.5f && ballPos.y <= 25f && 
 				ballPos.z >= 199.5f && ballPos.z <= 210.6f) {
-				strike++;
+                judgeStrike.enabled = true;
+                strike++;
 			} else {
+                judgeBall.enabled = true;
                 //field.GetComponent<Game> ().SetSituation("Ball");
 				badBall++;
 			}

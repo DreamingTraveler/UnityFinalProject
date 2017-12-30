@@ -1,13 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DoubleDetector : MonoBehaviour {
 	public GameObject field;
 	public GameObject pitcher;
+    private Image judgeDouble;
 	// Use this for initialization
 	void Start () {
-		
+        
 	}
 	
 	// Update is called once per frame
@@ -31,6 +33,7 @@ public class DoubleDetector : MonoBehaviour {
 		field.GetComponent<Game>().isBallCameraMoving = false;
 		pitcher.GetComponent<Pitch> ().cloneBall.SetActive (false);
 		pitcher.GetComponent<Pitch> ().EnableChooseButton ();
+        judgeDouble.GetComponent<Pitch>().judgeDouble.enabled = true;
         //field.GetComponent<Game> ().SetSituation ("Double");
 		if (field.GetComponent<Game>().nowAttack == "visiting") {
 			pitcher.GetComponent<Pitch> ().EnableReadyBtn ();
