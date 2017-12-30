@@ -1,15 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class HomeRunDetector : MonoBehaviour {
 	public GameObject field;
 	public GameObject pitcher;
-    private GameObject judgeHomeRun;
 	// Use this for initialization
 	void Start () {
-
+		
 	}
 	
 	// Update is called once per frame
@@ -32,7 +30,6 @@ public class HomeRunDetector : MonoBehaviour {
 	private void SwitchCamera(){
 		field.GetComponent<Game>().isBallCameraMoving = false;
 		pitcher.GetComponent<Pitch> ().cloneBall.SetActive (false);
-        judgeHomeRun.GetComponent<Pitch> ().judgeHomeRun.enabled = true;
 		if (field.GetComponent<Game>().nowAttack == "visitor") {
 			pitcher.GetComponent<Pitch> ().EnableReadyBtn ();
 			field.GetComponent<SwitchCamera>().SwitchToHitterCamera();

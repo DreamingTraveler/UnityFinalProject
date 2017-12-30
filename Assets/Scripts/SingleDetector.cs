@@ -1,15 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SingleDetector : MonoBehaviour {
 	public GameObject field;
 	public GameObject pitcher;
-    private Image judgeSingle;
 	// Use this for initialization
 	void Start () {
-
+		
 	}
 	
 	// Update is called once per frame
@@ -34,8 +32,6 @@ public class SingleDetector : MonoBehaviour {
 	private void SwitchCamera(){
 		field.GetComponent<Game>().isBallCameraMoving = false;
 		pitcher.GetComponent<Pitch> ().cloneBall.SetActive (false);
-        judgeSingle.GetComponent<Pitch>().judgeSingle.enabled = true;
-        //field.GetComponent<Game> ().SetSituation ("Single");
 		field.GetComponent<Game>().isHitting = false;
 		if (field.GetComponent<Game>().nowAttack == "visitor") {
 			pitcher.GetComponent<Pitch> ().EnableReadyBtn ();
