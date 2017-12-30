@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class BackToGame : MonoBehaviour {
-
+public class AboutInputText : MonoBehaviour {
+	public InputField teamName;
+	private string name;
 	// Use this for initialization
 	void Start () {
 		
@@ -12,10 +13,8 @@ public class BackToGame : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
-
-	public void LoadScene(){
-		SceneManager.LoadScene (1);
+		if (teamName.text.Length >= 6) {
+			teamName.DeactivateInputField ();
+		}
 	}
 }

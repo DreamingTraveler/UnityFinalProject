@@ -6,8 +6,20 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/StartUI.unity
+    guid: 408fd057b862ea94bacad1692dc11cb8
+  - enabled: 1
     path: Assets/Scenes/field.unity
     guid: 0049f8a8a263cd04898f6cb6f0c387b3
   - enabled: 1
-    path: Assets/Scenes/GameOver.unity
-    guid: 230fb4839ec6956488f965ff3d79afc4
+    path: Assets/Scenes/introductionUI.unity
+    guid: 21a0d9ab8e752524aaf4f4231dcd13d8
+  - enabled: 1
+    path: Assets/Scenes/hitterUI.unity
+    guid: 00880274ba0cdac4f9c1cf91c64a9628
+  - enabled: 1
+    path: Assets/Scenes/pictherUI.unity
+    guid: 48ae8322abead52439d32f1ed9fbb994
+  - enabled: 1
+    path: Assets/Scenes/setTeamNameUI.unity
+    guid: 91a226fbf93a3834fa98950700636b53

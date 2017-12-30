@@ -62,11 +62,12 @@ public class HitBall : MonoBehaviour {
 		Vector3 pitchPos = GameObject.Find ("Pitching_Point").transform.position;
 		Vector3 hitting_point = GameObject.Find ("Hitting_Point").transform.position;
 		float ballHorPos = ball.transform.position.x + ball.transform.position.z;
+		float notHitProb = Random.Range (1, 10);
 
 		isSwing = true;
 		print (ballHorPos.ToString("0.0"));
 		MatchForce (ballHorPos.ToString("0.0"));
-		if (CanHit (ball)) {
+		if (CanHit (ball) && notHitProb > 2) {
 			randomY = Random.Range (-200f, 720f);
 			ball.GetComponent<Rigidbody> ().velocity = (new Vector3 (hitting_point.x, randomY, hitting_point.z)).normalized * hitting_force;
 			field.GetComponent<Game> ().SetBall(ball);
@@ -74,6 +75,9 @@ public class HitBall : MonoBehaviour {
             field.GetComponent<FollowBall>().SetBall(ball);
 		} else {
 			pitcher.GetComponent<Pitch> ().strike++;
+			if (pitcher.GetComponent<Pitch> ().strike < 3) {
+				field.GetComponent<Game> ().ShowImage ("Strike");
+			}
 		}
 	}
 }

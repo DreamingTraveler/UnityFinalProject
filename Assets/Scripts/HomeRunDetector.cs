@@ -23,7 +23,8 @@ public class HomeRunDetector : MonoBehaviour {
 		field.GetComponent<Game> ().ToNextPlayer();
 		field.GetComponent<Game>().isBallFlying = false;
 		field.GetComponent<Game>().AddHitNum();
-		Invoke ("SwitchCamera", 1.5f);
+		field.GetComponent<Game> ().ShowImage ("HomeRun");
+		Invoke ("SwitchCamera", 2f);
 	}
 
 	private void SwitchCamera(){
@@ -35,6 +36,5 @@ public class HomeRunDetector : MonoBehaviour {
 		} else {
 			pitcher.GetComponent<Pitch>().EnableChooseButton();
 		}
-        //field.GetComponent<Game> ().SetSituation("HomeRun");
 	}
 }

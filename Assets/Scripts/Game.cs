@@ -14,33 +14,48 @@ public class Game : MonoBehaviour
 	public int visitorHitNum = 0;//
 	public int currentInningScore = 0;
 	public bool isTopInning = true;//
+	public bool isGameEnd = false;
 	public string nowAttack = "visitor";//
 	public bool isHitting = false;
 	public bool isBallFlying = false;
 	public bool isBallCameraMoving = false;
 	public GameObject changeInningScene;
+	public GameObject scoreCanvas;
+
+	public Image ballImg;
+	public Image baseOnBallsImg;
+	public Image doubleImg;
+	public Image foulImg;
+	public Image homeRunImg;
+	public Image singleImg;
+	public Image strikeImg;
+	public Image strikeOutImg;
+	public Image tripleImg;
+	public Image outImg;
 
 	private GameObject HomeRunWall;
 	private GameObject pitcher;
 	private GameObject ball;
-    private Text homePointText;
-	private Text visitorPointText;
-	private Text inningText;
-	private Text topInningText;
-	private Text bottomInningText;
-	private Text outNumText;
-    private Text situation;
+
+	public Button nextInningBtn;
+	public Button playAgainBtn;
+	public Button quitBtn;
+	public Text visitorName1;
+	public Text visitorName2;
+    public Text homePointText;
+	public Text visitorPointText;
+	public Text inningText;
+	public Text topInningText;
+	public Text bottomInningText;
+	public Text outNumText;
+	public Text resultText;
 	// Use this for initialization
 	void Start () {
 		pitcher = GameObject.FindGameObjectWithTag ("Pitcher");
-		homePointText = GameObject.Find("HomePoint").GetComponent<Text>();
-		visitorPointText = GameObject.Find("VisitingPoint").GetComponent<Text>();
-		inningText = GameObject.Find ("Inning").GetComponent<Text> ();
-        situation = GameObject.Find ("Situation").GetComponent<Text> ();
-		topInningText = GameObject.Find ("TopInning").GetComponent<Text> ();
-		bottomInningText = GameObject.Find ("BottomInning").GetComponent<Text> ();
-		outNumText = GameObject.Find ("Out").GetComponent<Text> ();
 		HomeRunWall = GameObject.Find ("HomerunWall");
+		visitorName1.text = PlayerPrefs.GetString ("TeamName");
+		visitorName2.text = PlayerPrefs.GetString ("TeamName");
+		HideImage ();
 	}
 	
 	// Update is called once per frame
@@ -59,8 +74,19 @@ public class Game : MonoBehaviour
 	}
 
 	private void JudgeWinner(){
-		if(inning > 6){
-			SceneManager.LoadScene (1);
+		if (isGameEnd) {
+			changeInningScene.SetActive (true);
+			resultText.gameObject.SetActive (true);
+			nextInningBtn.gameObject.SetActive (false);
+			playAgainBtn.gameObject.SetActive (true);
+			quitBtn.gameObject.SetActive (true);
+			if (visitorScore > homeScore) {
+				resultText.text = "YOU WIN!!";
+			} else if (visitorScore == homeScore) {
+				resultText.text = "DRAW";
+			} else {
+				resultText.text = "YOU LOSE";
+			}
 		}
 	}
 
@@ -86,14 +112,20 @@ public class Game : MonoBehaviour
 	private void ToNextHalfInning(){
 		outNum = 0;
 		gameObject.GetComponent<ShowScore> ().Show ();
-
 		gameObject.GetComponent<BaseCondition>().SetBase("Empty");
 		changeInningScene.SetActive (true);
+		scoreCanvas.SetActive (false);
+		if (inning == 6) {
+			if ((homeScore > visitorScore && isTopInning) || !isTopInning) {
+				isGameEnd = true;
+			}
+		}
 	}
 
 	public void HideScene(){
 		currentInningScore = 0;
 		changeInningScene.SetActive (false);
+		scoreCanvas.SetActive (true);
 		if (isTopInning) {//Top -> Bottom
 			nowAttack = "home";
 			isTopInning = false;
@@ -107,34 +139,43 @@ public class Game : MonoBehaviour
 		}
 	}
 
+	public void ShowImage(string situation){
+		if (situation == "Ball") {
+			ballImg.gameObject.SetActive (true);
+		} else if (situation == "BB") {
+			baseOnBallsImg.gameObject.SetActive (true);
+		} else if (situation == "Double") {
+			doubleImg.gameObject.SetActive (true);
+		} else if (situation == "Foul") {
+			foulImg.gameObject.SetActive (true);
+		} else if (situation == "HomeRun") {
+			homeRunImg.gameObject.SetActive (true);
+		} else if (situation == "Single") {
+			singleImg.gameObject.SetActive (true);
+		} else if (situation == "Strike") {
+			strikeImg.gameObject.SetActive (true);
+		} else if (situation == "StrikeOut") {
+			strikeOutImg.gameObject.SetActive (true);
+		} else if (situation == "Triple") {
+			tripleImg.gameObject.SetActive (true);
+		} else if (situation == "Out") {
+			outImg.gameObject.SetActive (true);
+		}
+		Invoke ("HideImage", 1.5f);
+	}
 
-	/*
-    public void SetSituation(string occasion){
-        if (occasion == "Clear")
-            situation.text = "";
-
-        else if (occasion == "Strike")
-            situation.text = "Strike";
-        else if (occasion == "Ball")
-            situation.text = "Ball";
-
-        else if (occasion == "Single")
-            situation.text = "Single";
-        else if (occasion == "Double")
-            situation.text = "Double";
-        else if (occasion == "Triple")
-            situation.text = "Triple";
-        else if (occasion == "OutBall")
-            situation.text = "Out Ball";
-        else if (occasion == "HomeRun")
-            situation.text = "HomeRun";
-
-        else if (occasion == "StrileOut")
-            situation.text = "Strike Out";
-        else if (occasion == "BaseOnBall")
-            situation.text = "Base On Ball";
-    }
-    */
+	private void HideImage(){
+		ballImg.gameObject.SetActive(false);
+		baseOnBallsImg.gameObject.SetActive(false);
+		doubleImg.gameObject.SetActive(false);
+		foulImg.gameObject.SetActive(false);
+		homeRunImg.gameObject.SetActive(false);
+		singleImg.gameObject.SetActive(false);
+		strikeImg.gameObject.SetActive(false);
+		strikeOutImg.gameObject.SetActive(false);
+		tripleImg.gameObject.SetActive(false);
+		outImg.gameObject.SetActive (false);
+	}
 
 	public void AddHitNum(){
 		if (nowAttack == "home") {
@@ -155,19 +196,16 @@ public class Game : MonoBehaviour
 		currentInningScore += point;
     }
 
-    public void StrikeoutAndFourBall()
-    {
+    public void StrikeoutAndFourBall(){
         int strike = pitcher.GetComponent<Pitch>().strike;
         int badBall = pitcher.GetComponent<Pitch>().badBall;
-        if (strike == 3)
-        {//strikeout!
-            //SetSituation("Strike Out");
+        if (strike == 3){//strikeout!
+			ShowImage ("StrikeOut");
             outNum++;
             ToNextPlayer();
         }
-        else if (badBall == 4)
-        {
-            //SetSituation("BaseOnBall");
+        else if (badBall == 4){
+			ShowImage ("BB");
             ToNextPlayer();
             gameObject.GetComponent<BaseCondition>().BaseStateMachine(1);
         }
@@ -184,18 +222,16 @@ public class Game : MonoBehaviour
         if (ball.transform.position.y <= 1.0f)
         {//The ball falls to the field
             isBallFlying = false;
-            if ((ball.transform.position.x < 200f || ball.transform.position.z < 200f))
-            {//faul
-                //SetSituation("OutBall");
-                if (pitcher.GetComponent<Pitch>().strike < 2)
-                {
+            if ((ball.transform.position.x < 200f || ball.transform.position.z < 200f)){//faul
+				ShowImage ("Foul");
+                if (pitcher.GetComponent<Pitch>().strike < 2){
                     pitcher.GetComponent<Pitch>().strike++;
                 }
             }
 			else if ((!isHitting && (ball.transform.position.x > 200f && ball.transform.position.z > 200f)) ||
-				GameObject.Find("Hitter").GetComponent<HitBall>().randomY > 600)
-            {
+				GameObject.Find("Hitter").GetComponent<HitBall>().randomY > 600){
                 outNum++;
+				ShowImage ("Out");
                 ToNextPlayer();
             }
             isHitting = false;
@@ -203,8 +239,7 @@ public class Game : MonoBehaviour
         }
     }
 
-    private void SwitchCamera()
-    {
+    private void SwitchCamera(){
         isBallCameraMoving = false;
         pitcher.GetComponent<Pitch>().cloneBall.SetActive(false);
 		if (nowAttack == "visitor") {

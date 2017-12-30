@@ -24,6 +24,7 @@ public class SingleDetector : MonoBehaviour {
 			field.GetComponent<Game> ().ToNextPlayer();
 			field.GetComponent<Game>().isBallFlying = false;
 			field.GetComponent<Game>().AddHitNum();
+			field.GetComponent<Game> ().ShowImage ("Single");
 			Invoke ("SwitchCamera", 3.0f);
 		}
 	}

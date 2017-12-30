@@ -35,6 +35,7 @@ public class Pitch : MonoBehaviour {
 	private GameObject cursor;
 	private GameObject ballPositionImage;
 	private MeshRenderer targetMesh;
+	private RectTransform ballSituation;
 
 	private Button confirmBallPos;
 	private Button fourSeamBtn;
@@ -49,6 +50,7 @@ public class Pitch : MonoBehaviour {
     void Start () {
 		pitcherAnimator = GameObject.FindGameObjectWithTag("Pitcher").GetComponent<Animator> ();
 		pitcherAnimator.Play("Pitcher_Idle");
+		ballSituation = GameObject.Find ("BallSituation").GetComponent<RectTransform> ();
         field = GameObject.Find("Field");
         hitter = GameObject.FindGameObjectWithTag ("Hitter");
 		hittingPoint = GameObject.Find ("Hitting_Point");
@@ -66,7 +68,6 @@ public class Pitch : MonoBehaviour {
 		readyToHitBtn = GameObject.Find ("Ready").GetComponent<Button> ();
 
 		strikeBall = GameObject.Find ("StrikeBall").GetComponent<Text> ();
-
 		speedText = GameObject.Find ("Speed").GetComponent<Text> ();
     }
 		
@@ -75,18 +76,19 @@ public class Pitch : MonoBehaviour {
 		if (isPitching) {
 			CallHitter (cloneBall);
             Vector3 ballPos = cloneBall.transform.position;
-            for (int i = 0; i < 100000; i++){
+            for (int i = 0; i < 1000000; i++){
                 if (ballPos.x + ballPos.z >= 404.5f && ballPos.x + ballPos.z <= 415.5f) {
                     RecordBallPos();
                 }
             }
             StopBall(cloneBall);
 		} 
-
 		if (field.GetComponent<Game> ().nowAttack == "visitor") {
+			ballSituation.localPosition = new Vector3 (93, 106, 0);
 			strikeZone.SetActive(false);
 			DisableChooseButton ();
 		} else {
+			ballSituation.localPosition = new Vector3 (147, 259, 0);
 			readyToHitBtn.gameObject.SetActive (false);
 		}
 			
@@ -108,7 +110,7 @@ public class Pitch : MonoBehaviour {
 	}
 
 	IEnumerator AutoHitTime(GameObject cloneBall){
-		float randomNum = Random.Range (0f, 0.15f);
+		float randomNum = Random.Range (0f, 0.1f);
 
 		yield return new WaitForSeconds (randomNum);
 		if (hitter.GetComponent<HitBall> ().isSwing == false) {
@@ -259,9 +261,14 @@ public class Pitch : MonoBehaviour {
 			if (ballPos.x >= 198.5f && ballPos.x <= 209.3f && ballPos.y >= 12.5f && ballPos.y <= 25f && 
 				ballPos.z >= 199.5f && ballPos.z <= 210.6f) {
 				strike++;
+				if (strike < 3) {
+					field.GetComponent<Game> ().ShowImage ("Strike");
+				}
 			} else {
-                //field.GetComponent<Game> ().SetSituation("Ball");
 				badBall++;
+				if (badBall < 4) {
+					field.GetComponent<Game> ().ShowImage ("Ball");
+				}
 			}
 		}
 		Invoke ("ChangeImagePosition", 1.5f);
