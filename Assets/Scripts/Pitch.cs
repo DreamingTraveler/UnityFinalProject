@@ -7,11 +7,13 @@ public class Pitch : MonoBehaviour {
 	Animator pitcherAnimator;
 	Animator ballAnimator;
 	public GameObject ball;
-    public GameObject strikeZone;
+    //public GameObject strikeZone;
 	public GameObject cloneBall;
+	public GameObject ballPositionImage;
 	public float speed;
 	public float w, h;
 	public bool isPitching = false;
+	public bool isStrike = false;
 	public Button slider_btn;
 	public int ballMode = 0;
 	public float hittingPointMovingSpeed;
@@ -28,12 +30,11 @@ public class Pitch : MonoBehaviour {
 	private Vector3 tempPos;
 
     private GameObject field;
-
 	private GameObject hitter;
 	private GameObject hittingPoint;
 	private GameObject targetPoint;
 	private GameObject cursor;
-	private GameObject ballPositionImage;
+
 	private MeshRenderer targetMesh;
 	private RectTransform ballSituation;
 
@@ -58,7 +59,6 @@ public class Pitch : MonoBehaviour {
 		targetPos = targetPoint.transform.position;
 		targetMesh = targetPoint.GetComponent<MeshRenderer> ();
 		cursor = GameObject.FindGameObjectWithTag ("Cursor");
-		ballPositionImage = GameObject.Find ("BallPosition");
 
 		confirmBallPos = GameObject.Find ("Confirm").GetComponent<Button>();
 		fourSeamBtn = GameObject.Find ("FourSeam").GetComponent<Button> ();
@@ -85,7 +85,7 @@ public class Pitch : MonoBehaviour {
 		} 
 		if (field.GetComponent<Game> ().nowAttack == "visitor") {
 			ballSituation.localPosition = new Vector3 (93, 106, 0);
-			strikeZone.SetActive(false);
+			//strikeZone.SetActive(false);
 			DisableChooseButton ();
 		} else {
 			ballSituation.localPosition = new Vector3 (147, 259, 0);
@@ -213,6 +213,7 @@ public class Pitch : MonoBehaviour {
 
 	public void CallAnimate(){
 		canChooseBall = false;
+		isStrike = false;
 		DisableChooseButton ();
 		hitter.GetComponent<HitBall> ().hitting_force = 0;
 		hitter.GetComponent<HitBall> ().isSwing = false;
@@ -220,7 +221,7 @@ public class Pitch : MonoBehaviour {
 
 		probHit = Random.Range (1f, 100f);
 		print ("ProbHit:" + probHit);
-        strikeZone.SetActive(false);
+        //strikeZone.SetActive(false);
 		Invoke ("PitchAnimate", 2.0f);
 	}
 
@@ -229,7 +230,7 @@ public class Pitch : MonoBehaviour {
 		sliderBtn.gameObject.SetActive (true);
 		cutterBtn.gameObject.SetActive (true);
 		forkballBtn.gameObject.SetActive (true);
-        strikeZone.SetActive(true);
+        //strikeZone.SetActive(true);
 		field.GetComponent<Game>().isHitting = false;
         field.GetComponent<SwitchCamera>().SwitchToPitcherCamera();
         //Invoke("SetSituationClear", 1.0f);
@@ -251,15 +252,16 @@ public class Pitch : MonoBehaviour {
 
 	public void JudgeBall(){
 		Vector3 ballPos = tempPos;
+		/*
 		if (field.GetComponent<Game> ().nowAttack == "visitor") {
 			ballPositionImage.transform.position = hitterCamera.WorldToScreenPoint(ballPos);
 		} else {
 			ballPositionImage.transform.position = pitcherCamera.WorldToScreenPoint(ballPos);
-		}
+		}*/
 			
 		if (hitter.GetComponent<HitBall> ().isSwing == false) {
-			if (ballPos.x >= 198.5f && ballPos.x <= 209.3f && ballPos.y >= 12.5f && ballPos.y <= 25f && 
-				ballPos.z >= 199.5f && ballPos.z <= 210.6f) {
+			if (/*ballPos.x >= 198.5f && ballPos.x <= 209.3f && ballPos.y >= 12.5f && ballPos.y <= 25f && 
+				ballPos.z >= 199.5f && ballPos.z <= 210.6f/*/isStrike) {
 				strike++;
 				if (strike < 3) {
 					field.GetComponent<Game> ().ShowImage ("Strike");
@@ -271,7 +273,7 @@ public class Pitch : MonoBehaviour {
 				}
 			}
 		}
-		Invoke ("ChangeImagePosition", 1.5f);
+		//Invoke ("ChangeImagePosition", 1.5f);
 	}
 
 	private void ChangeImagePosition(){

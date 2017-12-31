@@ -18,7 +18,7 @@ EditorBuildSettings:
     path: Assets/Scenes/hitterUI.unity
     guid: 00880274ba0cdac4f9c1cf91c64a9628
   - enabled: 1
-    path: Assets/Scenes/pictherUI.unity
+    path: Assets/Scenes/pitcherUI.unity
     guid: 48ae8322abead52439d32f1ed9fbb994
   - enabled: 1
     path: Assets/Scenes/setTeamNameUI.unity

@@ -10,6 +10,8 @@ public class HitBall : MonoBehaviour {
 	GameObject pitcher;
 	Rigidbody rig;
 
+	public GameObject strikeDetector;
+	public GameObject ballDetector;
 	public float hitting_force;
 	public float randomY;
 	public bool isSwing = false;
@@ -68,6 +70,8 @@ public class HitBall : MonoBehaviour {
 		print (ballHorPos.ToString("0.0"));
 		MatchForce (ballHorPos.ToString("0.0"));
 		if (CanHit (ball) && notHitProb > 2) {
+			strikeDetector.GetComponent<DetectStrike>().ChangeImagePosition ();
+			ballDetector.GetComponent<DetectBall>().ChangeImagePosition ();
 			randomY = Random.Range (-200f, 720f);
 			ball.GetComponent<Rigidbody> ().velocity = (new Vector3 (hitting_point.x, randomY, hitting_point.z)).normalized * hitting_force;
 			field.GetComponent<Game> ().SetBall(ball);
