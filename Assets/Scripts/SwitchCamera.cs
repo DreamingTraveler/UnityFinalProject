@@ -40,8 +40,8 @@ public class SwitchCamera : MonoBehaviour {
         ballCamera.gameObject.SetActive(false);
         ballAL.enabled = false;
 
-		scoreCanvas.SetActive (true);
 		strikeZone.SetActive (true);
+		scoreCanvas.SetActive (true);
     }
 
     public void SwitchToHitterCamera(){

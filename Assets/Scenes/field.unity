@@ -1834,6 +1834,7 @@ MonoBehaviour:
   ball: {fileID: 1543110710257238, guid: 7d95c6450e76bb648ae62706bd53ef4d, type: 2}
   cloneBall: {fileID: 0}
   ballPositionImage: {fileID: 573326866}
+  strikeZone: {fileID: 1578830452}
   speed: 300
   w: 511
   h: 50
@@ -4065,7 +4066,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 839906925}
   m_LocalRotation: {x: -0, y: 0.9302562, z: -0, w: 0.36691085}
-  m_LocalPosition: {x: -155, y: 19.3, z: 613}
+  m_LocalPosition: {x: -394, y: 19.3, z: 868}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -7473,7 +7474,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1578830452}
   m_LocalRotation: {x: -0, y: 0.3759685, z: -0, w: 0.92663246}
-  m_LocalPosition: {x: 200.9, y: 19.3, z: 201.8}
+  m_LocalPosition: {x: 199.2, y: 19.3, z: 200.1}
   m_LocalScale: {x: 11.808898, y: 12.1412945, z: 5.461391}
   m_Children: []
   m_Father: {fileID: 0}

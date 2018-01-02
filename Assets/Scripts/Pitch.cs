@@ -10,6 +10,7 @@ public class Pitch : MonoBehaviour {
     //public GameObject strikeZone;
 	public GameObject cloneBall;
 	public GameObject ballPositionImage;
+	public GameObject strikeZone;
 	public float speed;
 	public float w, h;
 	public bool isPitching = false;
@@ -85,10 +86,11 @@ public class Pitch : MonoBehaviour {
 		} 
 		if (field.GetComponent<Game> ().nowAttack == "visitor") {
 			ballSituation.localPosition = new Vector3 (93, 106, 0);
-			//strikeZone.SetActive(false);
+			strikeZone.GetComponent<MeshRenderer> ().enabled = false;
 			DisableChooseButton ();
 		} else {
 			ballSituation.localPosition = new Vector3 (147, 259, 0);
+			strikeZone.GetComponent<MeshRenderer> ().enabled = true;
 			readyToHitBtn.gameObject.SetActive (false);
 		}
 			
@@ -110,7 +112,7 @@ public class Pitch : MonoBehaviour {
 	}
 
 	IEnumerator AutoHitTime(GameObject cloneBall){
-		float randomNum = Random.Range (0f, 0.1f);
+		float randomNum = Random.Range (0.01f, 0.09f);
 
 		yield return new WaitForSeconds (randomNum);
 		if (hitter.GetComponent<HitBall> ().isSwing == false) {
@@ -143,13 +145,13 @@ public class Pitch : MonoBehaviour {
 			targetPos = new Vector3(Random.Range(195f, 215f), Random.Range(13f,27f), Random.Range(195f,215f));
 			SetModeAsFourSeam ();
 		} else if (randomNumForBallType >= 50f && randomNumForBallType < 67f) {
-			targetPos = new Vector3(Random.Range(197f, 207f), Random.Range(13f,27f), Random.Range(203f,213f));
+			targetPos = new Vector3(Random.Range(197f, 207f), Random.Range(16f,27f), Random.Range(203f,213f));
 			SetModeAsSlider ();
 		} else if (randomNumForBallType >= 67f && randomNumForBallType < 84f) {
-			targetPos = new Vector3(Random.Range(197f, 207f), Random.Range(13f,27f), Random.Range(203f,213f));
+			targetPos = new Vector3(Random.Range(197f, 207f), Random.Range(16f,27f), Random.Range(203f,213f));
 			SetModeAsCutter ();
 		} else {
-			targetPos = new Vector3(Random.Range(197f, 207f), Random.Range(18f,28f), Random.Range(195f,213f));
+			targetPos = new Vector3(Random.Range(197f, 207f), Random.Range(19f,28f), Random.Range(195f,213f));
 			SetModeAsFork ();
 		}
 		readyToHitBtn.gameObject.SetActive (false);
@@ -246,7 +248,7 @@ public class Pitch : MonoBehaviour {
 	private void PitchAnimate(){
 		pitcherAnimator.SetTrigger ("isPitch");
 
-		hittingPoint.transform.position = new Vector3 (-511f, 19.3f, 995f);
+		hittingPoint.transform.position = new Vector3 (-394f, 19.3f, 868f);
 		Invoke ("PitchBall", 1.0f);
 	}
 
@@ -297,25 +299,25 @@ public class Pitch : MonoBehaviour {
 
 	public void SetModeAsFourSeam(){
 		ballMode = 0;
-		hittingPointMovingSpeed = 10000f;
+		hittingPointMovingSpeed = 9000f;
 		speed = Random.Range (320f,350f);
 	}
 
 	public void SetModeAsSlider(){
 		ballMode = 1;
-		hittingPointMovingSpeed = 13000f;
+		hittingPointMovingSpeed = 12000f;
 		speed = Random.Range (260f,280f);
 	}
 
 	public void SetModeAsCutter(){
 		ballMode = 2;
-		hittingPointMovingSpeed = 11200f;
+		hittingPointMovingSpeed = 10200f;
 		speed = Random.Range (300f,320f);
 	}
 
 	public void SetModeAsFork(){
 		ballMode = 3;
-		hittingPointMovingSpeed = 13000f;
+		hittingPointMovingSpeed = 12000f;
 		speed = Random.Range (260f,280f);
 	}
     
