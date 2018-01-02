@@ -8,6 +8,7 @@ public class SwitchCamera : MonoBehaviour {
     public Camera ballCamera;
 	public string nowCamera;
 	public GameObject scoreCanvas;
+	public GameObject strikeZone;
 
     private AudioListener pitcherAL;
     private AudioListener hitterAL;
@@ -40,6 +41,7 @@ public class SwitchCamera : MonoBehaviour {
         ballAL.enabled = false;
 
 		scoreCanvas.SetActive (true);
+		strikeZone.SetActive (true);
     }
 
     public void SwitchToHitterCamera(){
@@ -52,6 +54,7 @@ public class SwitchCamera : MonoBehaviour {
         ballAL.enabled = false;
 
 		scoreCanvas.SetActive (true);
+		strikeZone.SetActive (true);
     }
 
     public void SwitchToBallCamera() {
@@ -64,5 +67,6 @@ public class SwitchCamera : MonoBehaviour {
         ballAL.enabled = true;
 
 		scoreCanvas.SetActive (false);
+		strikeZone.SetActive (false);
     }
 }
