@@ -262,8 +262,7 @@ public class Pitch : MonoBehaviour {
 		}*/
 			
 		if (hitter.GetComponent<HitBall> ().isSwing == false) {
-			if (/*ballPos.x >= 198.5f && ballPos.x <= 209.3f && ballPos.y >= 12.5f && ballPos.y <= 25f && 
-				ballPos.z >= 199.5f && ballPos.z <= 210.6f/*/isStrike) {
+			if (isStrike) {
 				strike++;
 				if (strike < 3) {
 					field.GetComponent<Game> ().ShowImage ("Strike");
