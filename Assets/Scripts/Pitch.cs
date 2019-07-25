@@ -112,8 +112,8 @@ public class Pitch : MonoBehaviour {
 	}
 
 	IEnumerator AutoHitTime(GameObject cloneBall){
-		float randomNum = Random.Range (0.01f, 0.09f);
-
+		float randomNum = Random.Range (0.01f, 0.08f);
+		print ("FS"+randomNum);
 		yield return new WaitForSeconds (randomNum);
 		if (hitter.GetComponent<HitBall> ().isSwing == false) {
 			AutoHit ();

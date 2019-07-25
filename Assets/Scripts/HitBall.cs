@@ -69,7 +69,7 @@ public class HitBall : MonoBehaviour {
 		isSwing = true;
 		print (ballHorPos.ToString("0.0"));
 		MatchForce (ballHorPos.ToString("0.0"));
-		if (CanHit (ball) && notHitProb > 2) {
+		if (CanHit (ball)) {
 			strikeDetector.GetComponent<DetectStrike>().ChangeImagePosition ();
 			ballDetector.GetComponent<DetectBall>().ChangeImagePosition ();
 			randomY = Random.Range (-200f, 720f);
